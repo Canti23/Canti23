@@ -1,0 +1,69 @@
+<!DOCTYPE html><html lang="ru" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="initial-scale=1"><title>Доступ к буферу обмена с помощью JavaScript - Canti</title><meta name="description" content="В этой статье мы собираемся показать вам как используя обычный JavaScript, управлять буфером обмена пользователя."><meta property="og:name" content="Доступ к буферу обмена с помощью JavaScript"><meta property="og:description" content="В этой статье мы собираемся показать вам как используя обычный JavaScript, управлять буфером обмена пользователя."><meta property="og:site_name" content="Canti"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png"><meta property="og:image" content="/images/logo.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,500&amp;amp;subset=cyrillic|PT+Serif:400,400i,500,500i&amp;amp;subset=cyrillic"><link rel="stylesheet" href="/main.css"></head><body class="page page--articles"><header class="c-header"><div class="container container--large"><div class="header"><div class="header__info"><img src="/images/logo.png" class="header__logotype"><span class="header__site-name">Canti</span></div><ul class="header__nav"><li><a href="/" class="active">Статьи</a></li><li><a href="/about.html">Обо мне </a></li></ul></div></div></header><main><article class="article"><div class="container"><h1 class="article__title">Доступ к буферу обмена с помощью JavaScript</h1><div class="article__information"><a href="http://tutorialzine.com/2016/10/quick-tip-accessing-the-clipboard-with-javascript/" class="article__original">Quick Tip: Accessing The Clipboard With JavaScript</a><div class="article__detail"><span class="article__date">2016-10-27</span><div class="article__tags"><span class="article__tag">JS</span></div></div></div></div><div class="container container--large article__image ta-center"><img src="/images/articles/03_01.png" alt="Доступ к буферу обмена с помощью JavaScript"/></div><div class="container"><p>В этой статье мы собираемся показать вам как используя обычный JavaScript сделать:</p>
+<ol>
+<li>Добавить текст в буфер обмена, с помощью события, например нажатие на кнопку.</li>
+<li>Изменить содержимое буфера, когда пользователь что-нибудь копирует.</li>
+</ol>
+<p>API, которое будем использовать не требует каких либо дополнительных библиотек, и имеет почти идеальную поддержку среди браузеров.</p>
+<h2>Копирование по клику</h2><p>Удивительно доступная функция, которую вы можете добавить на свой сайт это возможность копировать текст с помощью кнопки. Это может помочь чтобы быстро скопировать ссылку, длинную строку, такую как SSH-ключ, команду для терминала, шестнадцатеричный код цвета, или любую другую информацию которая нужно быстро скопировать и вставить. </p>
+<p>Чтобы это произошло, мы будем использовать крутой JavaScript метод именуемый <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand">execCommand()</a>. Он позволяет нам вызывать различные события связанные с изменением контента, например сделать текст жирным/курсивом, отменить действие или повтор его, а также скопировать/вырезать/вставить.</p>
+<p>Это работает точно так же, как нажатие CTRL/Cmd+C на вашей клавиатуре, итак для того, чтобы скопировать любой текст, для начала нам необходимо его выделить. В JavaScript это возможно, спасибо <a href="https://developer.mozilla.org/en-US/docs/Web/API/Selection">Selection API</a>, который позволяет нам программно выделить текст в любом HTML элементе на странице:</p>
+<pre><code class="language-javascript">var button = document.getElementById(&quot;copy-button&quot;),
+    contentHolder = document.getElementById(&quot;content-holder&quot;);
+
+button.addEventListener(&quot;click&quot;, function() {
+
+    // Нам понадобится объект диапазона и выделения
+    var range = document.createRange(),
+        selection = window.getSelection();
+
+    // Очищаем выделение от предыдущей информации
+    selection.removeAllRanges();
+
+    // Выделяем весь контент в параграфе contentHolder.
+    range.selectNodeContents(contentHolder);
+
+    // Добавляем диапазон в выделение.
+    selection.addRange(range);
+
+    // Копируем выделенное в буфер обмена.
+    document.execCommand(&#39;copy&#39;);
+
+    // Можем очистить выделение.
+    selection.removeAllRanges();
+
+}, false);
+</code></pre>
+<p>Если текст, который вам нужен, не находится на странице, вам необходимо сначала записать его в скрытый элемент.</p>
+<h2>Изменить скопированный текст</h2><p>Здесь мы покажем вам как управлять содержимым в буфере обмена, уже после того как он был скопирован. Это может быть очень полезно для избегания кода, форматирования номеров, дат, или для других трансформаций таких как изменение регистра и т.п.</p>
+<p>JavaScript предоставляет нам события <a href="https://developer.mozilla.org/en-US/docs/Web/Events/copy">copy()</a> и <a href="https://developer.mozilla.org/en-US/docs/Web/Events/paste">paste()</a>, но все спроектировано таким образом, что если содержимое в буфере обмена, то оно в безопасности:</p>
+<ul>
+<li>В обработчике события <strong>copy</strong> мы не можем прочитать что записано в буфер, так как здесь может быть личная информация к которой у нас нет доступа. Тем не менее, мы можем перезаписать данные в буфере обмена.</li>
+<li>В обработчике события <strong>paste</strong>, всё наоборот: мы можем прочитать данные, но не можем изменить их. </li>
+</ul>
+<p>Так как мы хотим прочитать и записать в одно время, нам понадобиться Selection API еще раз. Вот решение:</p>
+<pre><code class="language-javascript">document.addEventListener(&#39;copy&#39;, function(e){
+
+    // Нам необходимо предотвратить стандартное копирование,
+    // иначе все просто скопируется как обычно.
+    e.preventDefault();
+
+    // Событие не дает нам доступ к буферу поэтому 
+    // нам надо добавить выделение с помощью Selection API.
+    var selection = window.getSelection().toString();
+
+    // Трансформируем выделенное как хотим
+    // В примере мы кодируем HTML код.
+    var escaped = escapeHTML(selection);
+
+    // Вставляем измененный текст в буфер. 
+    e.clipboardData.setData(&#39;text/plain&#39;, escaped);
+
+});
+</code></pre>
+<p>Если вам нужно больше контроля над событиями копировать/вырезать/вставить, вы можете использовать библиотеку, такую как <a href="https://clipboardjs.com/">clipobard.js</a>. В них есть много возможностей и предоставляют хороший API для управления буфером обмена.</p>
+<p>Надеюсь, что эта статья вам понравилась!</p></div></article><div class="disqus container"><div id="disqus_thread"></div><script>var disqus_config = function () {
+this.page.url = "http://canti.pw/articles/2016-10-27-accessing-the-clipboard-with-javascript"
+this.page.identifier = "3";};
+(function() {var d = document, s = d.createElement('script');s.src = '//canti-pw.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());(d.head || d.body).appendChild(s);})();  
+</script><script id="dsq-count-scr" src="//canti-pw.disqus.com/count.js" async="async"></script></div></main><footer><div class="container"></div></footer><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css"></body></html>

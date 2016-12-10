@@ -1,0 +1,388 @@
+<!DOCTYPE html><html lang="ru" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="initial-scale=1"><title>Обещания JavaScript для чайников - Canti</title><meta name="description" content="JavaScript обещания не сложные. Тем не менее, много людей находят их тяжелыми для понимания. Поэтому хочу написать способ к их пониманию."><meta property="og:name" content="Обещания JavaScript для чайников"><meta property="og:description" content="JavaScript обещания не сложные. Тем не менее, много людей находят их тяжелыми для понимания. Поэтому хочу написать способ к их пониманию."><meta property="og:site_name" content="Canti"><meta property="og:image" content="/images/articles/06_01.png"><meta property="og:type" content="article"><link rel="canonical" href="http://canti.pw/articles/2016-12-11-javascript-promises-for-dummies"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,500&amp;amp;subset=cyrillic|PT+Serif:400,400i,500,500i&amp;amp;subset=cyrillic" lazyload><link rel="stylesheet" href="/css/main.css"></head><body class="page page--articles"><header class="c-header"><div class="container container--large"><div class="header"><div class="header__info"><img src="/images/logo.png" class="header__logotype"><span data-text="Canti" class="header__site-name glitch">Canti</span></div><ul class="header__nav"><li><a href="/" class="active">Статьи</a></li><li><a href="/about.html">Обо мне </a></li></ul></div></div></header><main><article class="article"><div class="container"><h1 class="article__title">Обещания JavaScript для чайников</h1><div class="article__information"><a href="https://scotch.io/tutorials/javascript-promises-for-dummies?utm_source=codropscollective" class="article__original">JavaScript Promises for Dummies</a><div class="article__detail"><span class="article__date">2016-12-11</span><div class="article__tags"><span class="article__tag">JS</span></div></div></div></div><div class="container container--large article__image ta-center"><img src="/images/articles/06_01.png" alt="Обещания JavaScript для чайников"/></div><div class="container"><p><strong>JavaScript обещания</strong> не сложные. Тем не менее, много людей находят их тяжелыми для понимания. Поэтому хочу написать способ к их пониманию.</p>
+<h2>Понимание обещаний</h2><p>Вкратце, обещание это:</p>
+<p>&quot;Представьте, вы <strong>ребенок</strong>. <strong>Ваша мама </strong>обещает<strong> купить вам </strong>новый телефон** на следующей неделе.&quot;</p>
+<p>Вы <em>не знаете</em> получите новый телефон на следующей неделе.  Ваша мама может или <em>действительно купить</em> вам новый телефон, или <em>оставить</em> вас без него если она разочарована :(.</p>
+<p>Это <strong>обещание</strong>. У обещания есть три состояния:</p>
+<ol>
+<li><p>Обещание <strong>ожидается</strong>. Вы не знаете, получите новый телефон на следующей неделе или нет.</p>
+</li>
+<li><p>Обещание <strong>разрешается</strong>. Ваша мама действительно покупает новый телефон.</p>
+</li>
+<li><p>Обещание <strong>отклоняется</strong>. Вы не получаете новый телефон.</p>
+</li>
+</ol>
+<h2>Создание обещания</h2><p>Переведем это в JavaScript.</p>
+<pre><code class="language-javascript">/* ES5 */
+var isMomHappy = false;
+
+// Обещание
+var willIGetNewPhone = new Promise(
+    function (resolve, reject) {
+        if (isMomHappy) {
+            var phone = {
+                brand: &#39;Samsung&#39;,
+                color: &#39;black&#39;
+            };
+            resolve(phone); // Разрешается 
+        } else {
+            var reason = new Error(&#39;Мама не довольна&#39;);
+            reject(reason); // Отклоняется
+        }
+
+    }
+);
+</code></pre>
+<p>Код сам по себе довольно выразителен. </p>
+<ol>
+<li><p>У нас есть логический <code>isMomHappy</code>, чтобы обозначить довольна мама или нет.</p>
+</li>
+<li><p>У нас есть обещание <code>willIGetNewPhone</code>. Обещание может быть разрешено (если мама покупает новый телефон) или отклонено (мама не довольна, и не покупает телефон).</p>
+</li>
+<li><p>Есть стандартный синтаксис, чтобы определить обещание, согласно <a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise">документации MDN</a>, он выглядит так:</p>
+<pre><code class="language-javascript">// Синтаксис обещаний выглядит так
+new Promise( function (resolve, reject) { ... } );
+</code></pre>
+</li>
+<li><p>Вот что стоит запомнить, когда результат успешен, вызывается <code>resolve(success_value)</code>, если результат не удался, вызывается <code>reject(fail_value)</code> в вашем обещании. В нашем примере, если мама счастлива, мы получим телефон. Следовательно, мы вызываем <code>resolve</code> функцию с переменной <code>phone</code>. Если мама несчастлива, мы вызываем функцию <code>reject</code> с причиной <code>reject(reason);</code>.</p>
+</li>
+</ol>
+<h2>Использование обещаний</h2><p>Итак у нас есть обещания, давайте их использовать.</p>
+<pre><code class="language-javascript">/* ES5 */
+
+// Вызываем обещание
+var askMom = function () {
+    willIGetNewPhone
+        .then(function (fulfilled) {
+            // получили новый телефон
+            console.log(fulfilled);
+         // Вывод: { brand: &#39;Samsung&#39;, color: &#39;black&#39; }
+        })
+        .catch(function (error) {
+            // упс, мама его не купила
+            console.log(error.message);
+         // Вывод: &#39;Мама не довольна&#39;
+        });
+};
+
+askMom();
+</code></pre>
+<ol>
+<li><p>Мы вызываем функцию <code>askMom</code>. В функции мы используем наше общение <code>willIGetNewPhone</code>.</p>
+</li>
+<li><p>Мы добавим некое действие если наше обещание будет разрешено или отклонено, мы используем <code>.then</code> и <code>.catch</code>, чтобы поймать наше действие.</p>
+</li>
+<li><p>В нашем примере, у нас есть <code>function(fulfilled) {}</code> в <code>.then</code>. Что за переменная <code>fulfilled</code>? Значение <code>fulfilled</code>, именно то значение которое прошло в обещании <code>resolve(success_value)</code>. В нашем случае, это будет <code>reason</code>.</p>
+</li>
+</ol>
+<p>Давайте запустим наш пример и посмотрим на результат!</p>
+<p>Демо: <a href="https://jsbin.com/nifocu/1/edit?js,console">https://jsbin.com/nifocu/1/edit?js,console</a></p>
+<p><img src="/images/articles/05_02.gif" alt="Пример обещаний javascript" title="Пример обещаний javascript"></p>
+<h2>Цепочка обещаний</h2><p>Обещания можно объединять в цепочки.</p>
+<p>Давай скажем, что вы ребенок и <strong>обещаете</strong> вашему другу, что <strong>покажете</strong> ему новый телефон, когда ваша мама его купит.</p>
+<p>Это другое обещание, напишем его!</p>
+<pre><code class="language-javascript">// 2-е Обещание
+var showOff = function (phone) {
+    return new Promise(
+        function (resolve, reject) {
+            var message = &#39;Привет друг, у меня есть новый &#39; +
+                phone.color + &#39; телефон &#39; + phone.brand;
+
+            resolve(message);
+        }
+    );
+};
+</code></pre>
+<p>Заметки</p>
+<ul>
+<li><p>В этом примере, как вы могли заметить, мы не вызываем <code>reject</code>. Это опционально.</p>
+</li>
+<li><p>Мы можем уменьшить пример используя <code>Promise.resolve</code>.</p>
+</li>
+</ul>
+<pre><code class="language-javascript">// Укоротим
+...
+
+// 2-е Обещание
+var showOff = function (phone) {
+    var message = &#39;Привет друг, у меня есть новый &#39; +
+                phone.color + &#39; телефон &#39; + phone.brand;
+
+    return Promise.resolve(message);
+};
+</code></pre>
+<p>Давайте сделаем цепочку обещаний. Вы, ребенок, можете начать обещание <code>showOff</code> после выполнения <code>willIGetNewPhone</code>.</p>
+<pre><code class="language-javascript">// Вызываем наше обещание
+var askMom = function () {
+    willIGetNewPhone
+    .then(showOff) // связываем их
+    .then(function (fulfilled) {
+            console.log(fulfilled);
+         // Вывод: &#39;Привет друг, у меня есть новый черный Samsung телефон.&#39;
+        })
+        .catch(function (error) {
+            console.log(error.message);
+         // Вывод: &#39;Мама не довольна&#39;
+        });
+};
+</code></pre>
+<p>Вот так просто можно создавать цепочки обещаний.</p>
+<h2>Обещания асинхронны</h2><p>Обещания асинхронны. Запишем лог сообщений до и после вызова обещания.</p>
+<pre><code class="language-javascript">// Вызываем
+var askMom = function () {
+    console.log(&#39;До просьбы к маме&#39;);
+    willIGetNewPhone
+        .then(showOff)
+        .then(function (fulfilled) {
+            console.log(fulfilled);
+        })
+        .catch(function (error) {
+            console.log(error.message);
+        });
+    console.log(&#39;После просьбы&#39;);
+}
+</code></pre>
+<p>Какова ожидается последовательность вывода? Наверное вы ждете такой:</p>
+<ol>
+<li><p>До просьбы к маме</p>
+</li>
+<li><p>Привет друг, у меня новый черный телефон Samsung</p>
+</li>
+<li><p>После просьбы</p>
+</li>
+</ol>
+<p>Однако, на самом деле порядок такой:</p>
+<ol>
+<li><p>До просьбы к маме</p>
+</li>
+<li><p>После просьбы</p>
+</li>
+<li><p>Привет друг, у меня новый черный телефон Samsung</p>
+</li>
+</ol>
+<p><img src="/images/articles/05_03.gif" alt="Пример асинхронности обещаний" title="Пример асинхронности обещаний"></p>
+<p><strong>Почему? Потому что жизнь (или JS) никого не ждет.</strong></p>
+<p>Вы, дети, не остановитесь играть пока будете ждать обещание от мамы. Не так ли? Это мы называем <strong>асинхронностью</strong>, код будет исполняться не блокируя процесс ожидая результат. Всё что должно ждать результата мы засовываем в <code>.then</code>.</p>
+<h2>Обещания в ES5, ES6/2015, ES7</h2><h3>ES5 - большинство браузеров</h3><p>Код демо работает в окружении ES5 (большинство браузеров и NodeJs) если вы подключите библиотеку <a href="http://bluebirdjs.com/docs/getting-started.html">Bluebird</a>. Это необходимо, потому что ES5 не поддерживает обещание из коробки. Другая известная библиотека для обещаний это <a href="https://github.com/kriskowal/q">Q</a> от Kris Kowal.</p>
+<h3>ES6 / ES2015 - новые браузеры, NodeJs v6</h3><p>Демо код работает из коробки потому что ES6 нативно поддерживает обещания. В дополнение, с ES6 функцией, мы можем упростить код с =&gt; и используя <code>const</code> и <code>let</code>.</p>
+<p>Вот пример кода ES6:</p>
+<pre><code class="language-javascript">/* ES6 */
+const isMomHappy = true;
+
+// Обещание
+const willIGetNewPhone = new Promise(
+    (resolve, reject) =&gt; {
+        if (isMomHappy) {
+            const phone = {
+                brand: &#39;Samsung&#39;,
+                color: &#39;black&#39;
+            };
+            resolve(phone);
+        } else {
+            const reason = new Error(&#39;Мама не довольна&#39;);
+            reject(reason);
+        }
+    }
+);
+
+const showOff = function (phone) {
+    const message = &#39;Привет друг, у меня есть новый &#39; +
+                phone.color + &#39; телефон &#39; + phone.brand;
+    return Promise.resolve(message);
+};
+
+// Вызываем наше обещание
+const askMom = function () {
+    willIGetNewPhone
+        .then(showOff)
+        .then(fulfilled =&gt; console.log(fulfilled))
+        .catch(error =&gt; console.log(error.message));
+};
+
+askMom();
+</code></pre>
+<p>Заметьте, что все <code>var</code> мы заменили <code>const</code>. Все <code>function(resolve, reject)</code> были упрощены до <code>(resolve, reject) =&gt;</code>. В этих изменениях есть свои преимущества. Подробнее читайте здесь:</p>
+<ul>
+<li><p><a href="https://strongloop.com/strongblog/es6-variable-declarations/">JavaScript ES6 Variable Declarations with let and const</a></p>
+</li>
+<li><p><a href="https://strongloop.com/strongblog/an-introduction-to-javascript-es6-arrow-functions/">An introduction to Javascript ES6 arrow functions</a></p>
+</li>
+</ul>
+<h3>ES7 - Async Await уменьшают синтаксис</h3><p>ES7 представил синтаксис <code>await</code> и <code>async</code>. Это уменьшает синтаксис и делает его легче для понимания, без <code>.then</code> и <code>.catch</code>.</p>
+<p>Перепишем наш пример на ES7.</p>
+<pre><code class="language-javascript">/* ES7 */
+const isMomHappy = true;
+
+// Обещание
+const willIGetNewPhone = new Promise(
+    (resolve, reject) =&gt; {
+        if (isMomHappy) {
+            const phone = {
+                brand: &#39;Samsung&#39;,
+                color: &#39;black&#39;
+            };
+            resolve(phone);
+        } else {
+            const reason = new Error(&#39;Мама не довольна&#39;);
+            reject(reason);
+        }
+
+    }
+);
+
+// 2-у обещание
+async function showOff(phone) {
+    return new Promise(
+        (resolve, reject) =&gt; {
+            var message = &#39;Привет друг, у меня есть новый &#39; +
+                phone.color + &#39; телефон &#39; + phone.brand;
+
+            resolve(message);
+        }
+    );
+};
+
+// Вызываем наше обещание
+async function askMom() {
+    try {
+        console.log(&#39;До просьбы к маме&#39;);
+
+        let phone = await willIGetNewPhone;
+        let message = await showOff(phone);
+
+        console.log(message);
+        console.log(&#39;После просьбы&#39;);
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+}
+
+(async () =&gt; {
+    await askMom();
+})();
+</code></pre>
+<ol>
+<li><p>Всякий раз когда вам нужно вернуть обещание в функцию, вы дописываете перед именем к функции <code>async</code>. Т.е. <code>async function showOff(phone)</code>.</p>
+</li>
+<li><p>А когда вам нужно вызвать обещание, добавьте <code>await</code>. И.е. <code>let phone = await willIGetNewPhone;</code> и <code>let message = await showOff(phone);</code>.</p>
+</li>
+<li><p>Используйте <code>try { … } catch(error) { … }</code> чтобы поймать ошибку, <strong>отклоненного</strong> обещания.</p>
+</li>
+</ol>
+<h2>Почему обещания и когда их использовать?</h2><p>Зачем нам нужны обещания? Как выглядел мир до них? Перед тем как ответить на эти вопросы нам нужно вернуться к основам.</p>
+<h3>Обычные функции против асинхронных</h3><p>Давайте взглянем на два примера, оба примера складывают два числа, в одном используется обычная функция, а в другом добавляем удаленность.</p>
+<h4>Обычная функция</h4><pre><code class="language-javascript">// Сложим два числа
+
+function add (num1, num2) {
+    return num1 + num2;
+}
+
+const result = add(1, 2); // Вы получите результат = 3 мгновенно
+</code></pre>
+<h4>Асинхронная функция</h4><pre><code class="language-javascript">// сложим два числа удаленно
+
+// Получим результат вызывая API
+const result = getAddResultFromServer(&#39;http://www.example.com?num1=1&amp;num2=2&#39;);
+// Вы получите результат = &quot;undefined&quot;
+</code></pre>
+<p>Если вы складываете числа обычной функцией, то получите результат мгновенно. Тем не менее, когда вы делаете запрос на удаленный ресурс, требуется ждать, вы не можете мгновенно получить результат.</p>
+<p>Следующим образом, вы не знаете получите ли результат, сервер может не отвечать, или делать это медленно. Вы же не хотите чтобы все процессы блокировались пока ждете результат.</p>
+<p>Вызов API, скачивание файлов, чтение файлов это обычные асинхронные операции, которые вы будете совершать.</p>
+<h3>Мир до обещаний: функции обратного вызова (callback)</h3><p>Должны ли мы использовать обещания для асинхронных вызовов? Нет. До обещаний, мы использовали колбэки. Колбэки это просто функция которую вы вызываете, когда получаете результат. Давайте изменим предыдущий пример с функцией обратного вызова.</p>
+<pre><code class="language-javascript">// Сложим два числа удаленно
+// получим результат вызывая API
+
+function addAsync (num1, num2, callback) {
+    // используем jQuery getJSON callback API
+    return $.getJSON(&#39;http://www.example.com&#39;, {
+        num1: num1,
+        num2: num2
+    }, callback);
+}
+
+addAsync(1, 2, success =&gt; {
+    // callback
+    const result = success; // вы получите результат = 3
+});
+</code></pre>
+<p>Синтаксис выглядит нормально, так зачем нам нужны обещания?</p>
+<h3>Что если вы хотите выполнить вложенное асинхронное действие</h3><p>Скажем, вместого того, чтобы сложить числа один раз, мы хотим сделать это трижды. С обычной функцией мы сделали бы так:</p>
+<pre><code class="language-javascript">let resultA, resultB, resultC;
+
+ function add (num1, num2) {
+    return num1 + num2;
+}
+
+resultA = add(1, 2); // вы получите resultA = 3 мгновенно
+resultB = add(resultA, 3); // вы получите resultB = 6 мгновенно
+resultC = add(resultB, 4); // вы получите resultC = 10 мгновенно
+
+console.log(&#39;total&#39; + resultC);
+console.log(resultA, resultB, resultC);
+</code></pre>
+<p>Как это выглядит с колбэками?</p>
+<pre><code class="language-javascript">
+let resultA, resultB, resultC;
+
+function addAsync (num1, num2, callback) {
+    return $.getJSON(&#39;http://www.example.com&#39;, {
+        num1: num1,
+        num2: num2
+    }, callback);
+}
+
+addAsync(1, 2, success =&gt; {
+    // callback 1
+    resultA = success; // вы получите результат = 3
+
+    addAsync(resultA, 3, success =&gt; {
+        // callback 2
+        resultB = success; // вы получите результат = 6 here
+
+        addAsync(resultB, 4, success =&gt; {
+            // callback 3
+            resultC = success; // вы получите результат = 10 here
+
+            console.log(&#39;total&#39; + resultC);
+            console.log(resultA, resultB, resultC);
+        });
+    });
+});
+</code></pre>
+<p>Синтаксис выглядит менее дружелюбным. Мягко говоря, выглядит как пирамида, но люди обычно называют это &quot;колбэковый ад&quot;, потому что колбэк вкладывается в другой. Представьте что у вас 10 колбэков, ваш код будет вложен 10 раз!</p>
+<h3>Спасение из ада колбэков</h3><p>Обещания пришли, чтобы спасти. Взглянем на этот же пример, но с обещаниями. </p>
+<pre><code class="language-javascript">// сложим два числа удаленно используя наблюдателя
+
+let resultA, resultB, resultC;
+
+function addAsync(num1, num2) {
+    // используем ES6 fetch API, который возвращает обещание
+    return fetch(`http://www.example.com?num1=${num1}&amp;num2=${num2}`)
+        .then(x =&gt; x.json());
+}
+
+addAsync(1, 2)
+    .then(success =&gt; {
+        resultA = success;
+        return resultA;
+    })
+    .then(success =&gt; addAsync(success, 3))
+    .then(success =&gt; {
+        resultB = success;
+        return resultB;
+    })
+    .then(success =&gt; addAsync(success, 4))
+    .then(success =&gt; {
+        resultC = success;
+        return resultC;
+    })
+    .then(success =&gt; {
+        console.log(&#39;Итого: &#39; + success)
+        console.log(resultA, resultB, resultC)
+    });
+</code></pre>
+<p>С обещаниями, мы какбы сплющили колбэки с <code>.then</code>. Код выглядит чище потому что больше нет вложенности. Конечно, вместе с ES7 синтаксисом <code>async</code>, мы можем сильнее усовершенствовать пример, но я оставлю это на вас :)</p></div></article><div class="container"><div class="c-footer"><div class="c-share"><a target="_blank" href="http://twitter.com/share?text=Обещания JavaScript для чайников&amp;url=http://canti.pw/articles/2016-12-11-javascript-promises-for-dummies&amp;via=Canti32" rel="nofollow" class="share share--twitter"><i class="fo-twitter"></i></a><a target="_blank" href="http://www.facebook.com/sharer.php?u=http://canti.pw/articles/2016-12-11-javascript-promises-for-dummies&amp;p[title]=Обещания JavaScript для чайников" rel="nofollow" class="share share--facebook"><i class="fo-facebook"></i></a><a target="_blank" href="https://plus.google.com/share?url=http://canti.pw/articles/2016-12-11-javascript-promises-for-dummies" rel="nofollow" class="share share--google"><i class="fo-gplus"></i></a><a target="_blank" href="http://vk.com/share.php?url=http://canti.pw/articles/2016-12-11-javascript-promises-for-dummies" rel="nofollow" class="share share--vkontakte"><i class="fo-vkontakte"></i></a></div></div></div><div class="c-disqus container"><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "http://canti.pw/articles/2016-12-11-javascript-promises-for-dummies"
+  this.page.identifier = "6";};
+  (function() {var d = document, s = d.createElement('script');s.src = '//canti-pw.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());(d.head || d.body).appendChild(s);})();  </script></div></main><link rel="stylesheet" href="/css/fontello.css"></body></html>

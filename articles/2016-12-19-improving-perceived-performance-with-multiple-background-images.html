@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="ru" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="initial-scale=1"><title>Улучшаем ощущаемую производительность с несколькими фоновыми изображениями - Canti</title><meta name="description" content=""><meta property="og:name" content="Улучшаем ощущаемую производительность с несколькими фоновыми изображениями"><meta property="og:description" content=""><meta property="og:site_name" content="Canti"><meta property="og:image" content="/images/articles/08_01.png"><meta property="og:type" content="article"><link rel="canonical" href="http://canti.pw/articles/2016-12-19-improving-perceived-performance-with-multiple-background-images"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,500&amp;amp;subset=cyrillic|PT+Serif:400,400i,500,500i&amp;amp;subset=cyrillic" lazyload><link rel="stylesheet" href="/css/main.css"></head><body class="page page--articles"><header class="c-header"><div class="container container--large"><div class="header"><div class="header__info"><img src="/images/logo.png" class="header__logotype"><a data-text="Canti" href="/" class="header__site-name glitch">Canti</a></div><ul class="header__nav"><li><a href="/" class="active">Статьи</a></li><li><a href="/about.html">Обо мне </a></li></ul></div></div></header><main><article class="article"><div class="container"><h1 class="article__title">Улучшаем ощущаемую производительность с несколькими фоновыми изображениями</h1><div class="article__information"><a href="http://csswizardry.com/2016/10/improving-perceived-performance-with-multiple-background-images/" class="article__original">Improving Perceived Performance with Multiple Background Images</a><div class="article__detail"><span class="article__date">2016-12-19</span><div class="article__tags"><span class="article__tag">HTML</span><span class="article__tag">CSS</span></div></div></div></div><div class="container container--large article__image ta-center"><img src="/images/articles/08_01.png" alt="Улучшаем ощущаемую производительность с несколькими фоновыми изображениями"/></div><div class="container"><p>Прямо сейчас я в поезде, и это означает ужасный wi-fi. Множество сайтов совсем отказываются загружаться, а те которые загружаются пропускают кучу изображений, оставляя большие пустые дыры на своих страницах. Большинство изображений, спасибо, не критичны для понимания контента который мне нужен, но их отсутствие напоминает мне, что я все еще жду прибытие чего-то, и во множестве случаев именно эта ощущаемая производительность, намного важнее чем фактическая производительность. Это дало мне маленькую идею.</p>
+<p>Некоторое время назад, я был консультантом на очень видном и очень нагруженном сайте компании, клиента, которого, к сожалению, не могу назвать. Я прибыл на полпути создания способа сделать вещи <em>быстрее</em>. </p>
+<p>Прославленные большие заглавные изображения, которые, даже когда оптимизированы, требуют некоторое время для загрузки. Я попробовал  множество чепухи, чтобы предвыбрать изображение, сделать запрос раньше, и т.д., была одна простая техника, которую я использовал - применять средний цвет картинки в качестве background-color, так пользователь хотя бы не будет смотреть на большое белое пространство пока изображение загружается. Это значительно улучшает ощущаемую производительность, и требует невероятно мало усилий для реализации:</p>
+<ol>
+<li><p>Откройте изображение в Photoshop</p>
+</li>
+<li><p>Фильтр » Размытие » Среднее</p>
+</li>
+<li><p>Используйте пипетку, чтобы взять цвет, который остался</p>
+</li>
+<li><p>Примените его как <code>background-color</code>.</p>
+</li>
+</ol>
+<pre><code class="language-css">.masthead {
+  background-image: url(/img/masthead.jpg);
+  background-color: #3d332b;
+}
+</code></pre>
+<p>Эту технику я также использую на главной странице своего сайта: если изображение загружается слишком долго, показывайте пользователю сплошной цвет. Однако, прямо сейчас, в поезде, я захожу на свой сайт и вижу это:</p>
+<figure class="image">
+<img src="/images/articles/08_02.png" alt="Пример сплошного цвета" title="Пример сплошного цвета">
+</figure>
+
+<p>Это изображение на самом деле критично для содержания, так что не важно, загрузились оно или нет, но в то время как это, вероятно, выглядит лучше, чем мое лицо, но все еще довольно раздражает: это просто большая, плоская, бездушная куча цвета. Как мы можем это улучшить?</p>
+<h2>CSS градиент и несколько фонов</h2><p>Проще говоря, я хочу сделать грубое упрощение фотографии приведя к градиенту CSS. Я не могу не подчеркнуть слова <em>грубое упрощение</em>: мы буквально говорим о нескольких аналогичных клякс средних цветов. И затем применю его как background-image, к верхнему баннеру, только: о нет! Ведь нас уже есть фоновое изображение. Но не волнуйтесь, мы можем устанавливать несколько фонов к одному элементу <a href="http://caniuse.com/#feat=multibackgrounds">начиная с IE9</a>. Так что мы можем установить наше изображение и его приближенный градиент за один присест, в одном описании.</p>
+<p>Это означает, что браузер:</p>
+<ol>
+<li><p>может отрисовать CSS приближение;</p>
+</li>
+<li><p>и сделать запрос на настоящие изображение, которое может загружаться сколько необходимо.</p>
+</li>
+</ol>
+<p>Читайте больше о <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Background_and_Borders/Using_CSS_multiple_backgrounds">множественных фонах на MDN</a>.</p>
+<h2>Создание градиента</h2><p>Чтобы получить градиентную версию моего заглавного изображения, я открываю его в фотошопе и поделю его на интервалы. Потому что большинство объектов на фотографии расположено сверху вниз, я сделал вертикальные куски.  Для меня очень удобно, что эти регионы попали в интервалы по 25%:</p>
+<figure class="image">
+<img src="/images/articles/08_03.png" alt="Пример разделения изображения" title="Пример разделения изображения">
+</figure>
+
+<p>Потом выбираю каждую секцию отдельно и делаем Фильтр » Размытие » Среднее, и это дает мне:</p>
+<figure class="image">
+<img src="/images/articles/08_04.png" alt="Пример разделения изображения - 2" title="Пример разделения изображения - 2">
+</figure>
+
+<p>Следующим шагом будем брать каждый цвет и вставлять его в градиент CSS:</p>
+<pre><code class="language-css">linear-gradient(to right, #807363 0%, #251d16 50%, #3f302b 75%, #100b09 100%)
+</code></pre>
+<p>Все что мне сейчас остается это применить это значение к свойству <code>background-image</code>:</p>
+<pre><code class="language-css">.page-head--masthead {
+  background-image: url(/img/css/masthead-large.jpg),
+                    linear-gradient(to right, #807363 0%, #251d16 50%, #3f302b 75%, #100b09 100%);
+}
+</code></pre>
+<p>Указываем фоны в таком порядке, что первое значение (в нашем случае, настоящее изображение) это верхнее  изображение, следующее, это что под ним, и так далее.</p>
+<p>Это означает что, если наше изображение снова не загрузится, мы увидим следующее:</p>
+<figure class="image">
+<img src="/images/articles/08_05.png" alt="Пример градиента" title="Пример градиента">
+</figure>
+
+<p>Небольшая разница, но безусловно не так глупо чем полностью однообразное изображение: это достаточно чтобы добавить немного фактуры и подсказать основную композицию пропавшего изображение.</p>
+<h2>Практичность</h2><p>Как вы видите для реализации, требуется довольно много ручного труда. Если/пока не будет надежного способа автоматизировать это, я думаю эту технику лучше всего применять в случаях похожих на мой: особенное изображение с маленьким шансом, на изменение.</p>
+<p>Предыдущим уровнем, просто брать средний цвет изображения и применять как background-color. Здесь не нужны градиенты и несколько фонов, но все равно потребуются операции над каждым изображением. </p>
+<p>Однако, я действительно очень рад, что с этим способом могу дать нечто немного более значительное пользователям со слабым интернетом. Если у вашего сайта есть похожие, статичные изображения, я рекомендую вам поэкспериментировать с этой техникой.</p></div></article><div class="container"><div class="c-footer"><div class="c-share"><a target="_blank" href="http://twitter.com/share?text=Улучшаем ощущаемую производительность с несколькими фоновыми изображениями&amp;url=http://canti.pw/articles/2016-12-19-improving-perceived-performance-with-multiple-background-images&amp;via=Canti32" rel="nofollow" class="share share--twitter"><i class="fo-twitter"></i></a><a target="_blank" href="http://www.facebook.com/sharer.php?u=http://canti.pw/articles/2016-12-19-improving-perceived-performance-with-multiple-background-images&amp;p[title]=Улучшаем ощущаемую производительность с несколькими фоновыми изображениями" rel="nofollow" class="share share--facebook"><i class="fo-facebook"></i></a><a target="_blank" href="https://plus.google.com/share?url=http://canti.pw/articles/2016-12-19-improving-perceived-performance-with-multiple-background-images" rel="nofollow" class="share share--google"><i class="fo-gplus"></i></a><a target="_blank" href="http://vk.com/share.php?url=http://canti.pw/articles/2016-12-19-improving-perceived-performance-with-multiple-background-images" rel="nofollow" class="share share--vkontakte"><i class="fo-vkontakte"></i></a></div></div></div><div class="c-disqus container"><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "http://canti.pw/articles/2016-12-19-improving-perceived-performance-with-multiple-background-images"
+  this.page.identifier = "8";};
+  (function() {var d = document, s = d.createElement('script');s.src = '//canti-pw.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());(d.head || d.body).appendChild(s);})();  </script></div></main><link rel="stylesheet" href="/css/fontello.css"></body></html>

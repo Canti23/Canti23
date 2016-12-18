@@ -76,7 +76,10 @@ askMom();
 </ol>
 <p>Давайте запустим наш пример и посмотрим на результат!</p>
 <p>Демо: <a href="https://jsbin.com/nifocu/1/edit?js,console">https://jsbin.com/nifocu/1/edit?js,console</a></p>
-<p><img src="/images/articles/06_02.gif" alt="Пример обещаний javascript" title="Пример обещаний javascript"></p>
+<figure class="image">
+<img src="/images/articles/06_02.gif" alt="Пример обещаний javascript" title="Пример обещаний javascript">
+</figure>
+
 <h2>Цепочка обещаний</h2><p>Обещания можно объединять в цепочки.</p>
 <p>Давай скажем, что вы ребенок и <strong>обещаете</strong> вашему другу, что <strong>покажете</strong> ему новый телефон, когда ваша мама его купит.</p>
 <p>Это другое обещание, напишем его!</p>
@@ -159,7 +162,10 @@ var askMom = function () {
 <li><p>Привет друг, у меня новый черный телефон Samsung</p>
 </li>
 </ol>
-<p><img src="/images/articles/06_03.gif" alt="Пример асинхронности обещаний" title="Пример асинхронности обещаний"></p>
+<figure class="image">
+<img src="/images/articles/06_03.gif" alt="Пример асинхронности обещаний" title="Пример асинхронности обещаний">
+</figure>
+
 <p><strong>Почему? Потому что жизнь (или JS) никого не ждет.</strong></p>
 <p>Вы, дети, не остановитесь играть пока будете ждать обещание от мамы. Не так ли? Это мы называем <strong>асинхронностью</strong>, код будет исполняться не блокируя процесс ожидая результат. Всё что должно ждать результата мы засовываем в <code>.then</code>.</p>
 <h2>Обещания в ES5, ES6/2015, ES7</h2><h3>ES5 - большинство браузеров</h3><p>Код демо работает в окружении ES5 (большинство браузеров и NodeJs) если вы подключите библиотеку <a href="http://bluebirdjs.com/docs/getting-started.html">Bluebird</a>. Это необходимо, потому что ES5 не поддерживает обещание из коробки. Другая известная библиотека для обещаний это <a href="https://github.com/kriskowal/q">Q</a> от Kris Kowal.</p>
@@ -351,8 +357,7 @@ addAsync(1, 2, success =&gt; {
 </code></pre>
 <p>Синтаксис выглядит менее дружелюбным. Мягко говоря, выглядит как пирамида, но люди обычно называют это &quot;колбэковый ад&quot;, потому что колбэк вкладывается в другой. Представьте что у вас 10 колбэков, ваш код будет вложен 10 раз!</p>
 <h3>Спасение из ада колбэков</h3><p>Чтобы нас спасти, пришли обещания. Взглянем на этот же пример, но с обещаниями. </p>
-<pre><code class="language-javascript">
-let resultA, resultB, resultC;
+<pre><code class="language-javascript">let resultA, resultB, resultC;
 
 function addAsync(num1, num2) {
     // используем ES6 fetch API, который возвращает обещание

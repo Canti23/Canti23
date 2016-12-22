@@ -1,0 +1,223 @@
+<!DOCTYPE html><html lang="ru" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="initial-scale=1"><title>Показываем динамические сообщения используя Web Notification API - Canti</title><meta name="description" content="Подробный урок по использованию API уведомлений браузера"><meta property="og:name" content="Показываем динамические сообщения используя Web Notification API"><meta property="og:description" content="Подробный урок по использованию API уведомлений браузера"><meta property="og:site_name" content="Canti"><meta property="og:image" content="/images/articles/09_01.png"><meta property="og:type" content="article"><link rel="canonical" href="http://canti.pw/articles/2016-12-23-browser-notification-api"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,500&amp;amp;subset=cyrillic|PT+Serif:400,400i,500,500i&amp;amp;subset=cyrillic" lazyload><link rel="stylesheet" href="/css/main.css"></head><body class="page page--articles"><header class="c-header"><div class="container container--large"><div class="header"><div class="header__info"><img src="/images/logo.png" class="header__logotype"><a data-text="Canti" href="/" class="header__site-name glitch">Canti</a></div><ul class="header__nav"><li><a href="/" class="active">Статьи</a></li><li><a href="/about.html">Обо мне </a></li></ul></div></div></header><main><article class="article"><div class="container article__header"><h1 class="article__title">Показываем динамические сообщения используя Web Notification API</h1><div class="article__information"><div class="article__original"><a href="https://www.sitepoint.com/browser-notification-api/">Displaying Dynamic Messages Using the Web Notification API</a></div><div class="article__detail"><span class="article__date">2016-12-23</span><div class="article__tags"><span class="article__tag">HTML</span><span class="article__tag">CSS</span><span class="article__tag">JS</span></div></div></div></div><div class="container container--large article__image ta-center"><img src="/images/articles/09_01.png" alt="Показываем динамические сообщения используя Web Notification API"/></div><div class="container article__content"><p>Мы живем в мире где уведомления от ваших любимых сайтов или приложений больше не существуют только в границах вашего смартфона. Теперь привычно получать уведомления прямо из вашего браузера. Например, Facebook отправляет вам уведомления если у вас есть новая заявка в друзья ил кто-то комментирует историю, где вас упомянули. Slack, популярное приложение для обмена сообщениями, отправляют вам уведомления когда вас упомянули в общении.</p>
+<p>Как фронтэнд разработчику, мне было интересно, как я мог бы использовать уведомления браузера для веб-сайтов, которые не имеют дело с большими потоками информации. Как я могу добавить уведомления браузера, которые бы соответствовали интересам посетителя на моем сайте?</p>
+<p>В этой статье мы реализуем систему уведомлений на сайте <a href="http://concisecss.com/">Concise CSS</a> которая будет предупреждать пользователей о выходе новой версии фрэймворка. Собираюсь показать вам, как я этого достиг используя <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage">localStorage</a> и <a href="https://developer.mozilla.org/en-US/docs/Web/API/notification">Notification API</a> браузера.</p>
+<figure class="image">
+<img src="/images/articles/09_02.png" alt="Уведомление браузера отображается на сайте concisecss.com, используя API" title="Уведомление браузера отображается на сайте concisecss.com, используя API">
+</figure>
+
+<h2>Основы Notification API</h2><p>Для начала, мы должны определить поддерживает браузер пользователя уведомления или нет. Основная работа на протяжении всего урока будет сделана с помощью <a href="https://developer.mozilla.org/en-US/docs/Web/API/notification">объекта уведомлений</a>. </p>
+<pre><code class="language-javascript">(function() {
+  if (&quot;Notification&quot; in window) {
+
+  }
+})();
+</code></pre>
+<p>Пока мы только определили, что уведомления поддерживаются браузером нашего посетителя. После того, как мы это установили, нам нужно знать, можем ли мы показать разрешения посетителю.</p>
+<p>Мы сохраняем вывод <a href="https://developer.mozilla.org/en-US/docs/Web/API/Notification/permission">свойства permission</a> в переменную. Если разрешение предоставлено или отклонено то мы ничего не получим. Если мы еще не запрашивали разрешение, то сделаем это методом <a href="https://developer.mozilla.org/en-US/docs/Web/API/Notification/requestPermission">requestPermission</a>.</p>
+<pre><code class="language-javascript">(function() {
+  if (&quot;Notification&quot; in window) {
+    var permission = Notification.permission;
+    if (permission === &quot;denied&quot; || permission === &quot;granted&quot;) {
+      return;
+    }
+    Notification.requestPermission();
+  }
+})();
+</code></pre>
+<p>Popup letting the user to allow or block browser notifications</p>
+<figure class="image">
+<img src="/images/articles/09_03.png" alt="Всплывающее окно спрашивает разрешение" title="Всплывающее окно спрашивает разрешение">
+</figure>
+
+<p>Вы должны увидеть в вашем браузере похожее уведомление как на на картинке выше.</p>
+<p>Теперь когда мы спросили разрешение, давайте изменим наш код, чтобы показать уведомление если разрешение получено:</p>
+<pre><code class="language-javascript">(function() {
+  if (&quot;Notification&quot; in window) {
+    var permission = Notification.permission;
+
+    if (permission === &quot;denied&quot; || permission === &quot;granted&quot;) {
+      return;
+    }
+
+    Notification
+      .requestPermission()
+      .then(function() {
+        var notification = new Notification(&quot;Hello, world!&quot;);
+      });
+  }
+})();
+</code></pre>
+<figure class="image">
+<img src="/images/articles/09_04.png" alt="Всплывающее окно с текстом Hello World" title="Всплывающее окно с текстом Hello World">
+</figure>
+
+<p>Скучно, но функционально.</p>
+<p>Здесь мы использовали основанный на <a href="http://canti.pw/articles/2016-12-11-javascript-promises-for-dummies">обещаниях</a> синтаксис метода <code>requestPermission()</code> для показа уведомлений после того как получили разрешение. Мы показываем уведомление используя <a href="https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification">конструктор</a>. Конструктор принимает два параметра, первый для заголовка уведомления и второй для опций. Перейдите по ссылке на документацию, чтобы найти полный список опций, которые могут быть переданы.</p>
+<h2>Сохранение версий фреймворка</h2><p>Ранее в этой статье, я упомянул, что мы будем использовать <code>LocalStorage</code>, чтобы помочь показывать уведомления. Использование <code>LocalStorage</code> является предпочтительным способом хранения информации на стороне клиента в JavaScript. Мы создадим в <code>LocalStorage</code> ключ с именем <code>conciseVersion</code> который будет хранить текущую версию фрейворка (т.е. 1.0.0). Затем мы можем использовать этот ключ, чтобы проверить наличие новых версий фреймворка. </p>
+<p>Как мы будем обновлять значение <code>conciseVersion</code>? Нам нужен способ устанавливать текущую версию всякий раз, когда кто-то посещает сайт. Также нам нужно обновлять это значение, всякий раз, когда выпускается новая версия. Каждый раз когда меняется значение <code>conciseVersion</code>, мы должны показать посетителю уведомление объявляющее новую версию фреймворка. Мы решим эту проблему добавив скрытый элемент на страницу. Этот элемент будет иметь класс <code>.js-currentVersion</code> и будет содержать только текущую версию фреймворка. Так как элемент находится в DOM, мы можем довольно просто взаимодействовать с ним используя JavaScript.</p>
+<p>Этот скрытый элемент мы будем использовать, чтобы хранить версию фреймворка в нашем ключе <code>conciseVersion</code>. Также мы будем использовать этот элемент для обновления этого ключа, когда выйдет новая версия фреймворка.</p>
+<pre><code class="language-html">&lt;span class=&quot;js-currentVersion&quot; aria-hidden=&quot;true&quot;&gt;3.4.0&lt;/span&gt;
+</code></pre>
+<p>Используем немного CSS, чтобы спрятать элемент:</p>
+<pre><code class="language-css">[aria-hidden=&quot;true&quot;] {
+  display: none;
+  visibility: hidden;
+}
+</code></pre>
+<blockquote>
+<p><strong>Примечание:</strong> так как элемент не содержит никакого значимого контента, скринридерам не нужно получать доступ к ниму. Вот почему я указал атрибуту <a href="https://www.w3.org/TR/wai-aria/states_and_properties#aria-hidden">aria-hidden</a> значение true и использовал <code>display: none</code>, чтобы его скрыть. Пожалуйста, обратитесь к этой статье <a href="http://webaim.org/techniques/css/invisiblecontent/">WebAIM</a> для большой статьи на спрятанном контенте.</p>
+</blockquote>
+<p>Теперь мы можем взять этот элемент и взаимодействовать с ним в JavaScript. Нам нужно написать функцию, которая возвращает текст скрытого элемента, который мы только что создали.</p>
+<pre><code class="language-javascript">function checkVersion() {
+  var latestVersion = document.querySelector(&quot;.js-currentVersion&quot;).textContent;
+}
+</code></pre>
+<p>Эта функция сохраняет контент элемента <code>.js-currentVersion</code> используя свойство <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent">textContent</a>. Давайте добавим переменную, которая будет хранить содержимое нашего conciseVersion из localStorage.</p>
+<pre><code class="language-javascript">function checkVersion() {
+  var latestVersion = document.querySelector(&quot;.js-currentVersion&quot;).textContent;
+  var currentVersion = localStorage.getItem(&quot;conciseVersion&quot;);
+}
+</code></pre>
+<p>Теперь у нас есть переменная с последней версией фреймворка, и мы храним наш <code>LocalStorage</code> ключ к переменной. Пришло время, чтобы добавить логику, которая определит, доступна ли новая версия фреймворка или нет.</p>
+<p>первым делом мы проверим существует ли значение в ключе <code>conciseVersion</code>. Если нет, мы покажем пользователю уведомление, так как, скорее всего, это его первый визит. Если значение существует, мы проверим, что это значение (сохраненное в переменной <code>currentVersion</code>) больше чем текущая версия (переменная <code>latestVersion</code>). Если последняя версия фрейворка больше, чем версия которую пользователь видел в последний раз, мы узнаем, что вышла новая версия.</p>
+<blockquote>
+<p><strong>Примечание:</strong> для сравнения двух версий строк мы будем использовать библиотеку <a href="https://www.npmjs.com/package/semver-compare">semver-compare</a>.</p>
+</blockquote>
+<p>Зная это мы показываем посетителю уведомление и обновляем наше значение в ключе <code>conciseVersion</code>.</p>
+<pre><code class="language-javascript">function checkVersion() {
+  var latestVersion = document.querySelector(&quot;.js-currentVersion&quot;).textContent;
+  var currentVersion = localStorage.getItem(&quot;conciseVersion&quot;);
+
+  if (currentVersion === null || semverCompare(currentVersion, latestVersion) === -1) {      
+    var notification = new Notification(&quot;Hello, world!&quot;);
+
+    localStorage.setItem(&quot;conciseVersion&quot;, latestVersion);
+  }
+}
+</code></pre>
+<p>Чтобы использовать эту функцию, нам нужно изменить наш код разрешений:</p>
+<pre><code class="language-javascript">(function() {
+  if (&quot;Notification&quot; in window) {
+    var permission = Notification.permission;
+
+    if (permission === &quot;denied&quot;) {
+      return;
+    } else if (permission === &quot;granted&quot;) {
+      return checkVersion();
+    }
+
+    Notification.requestPermission().then(function() {
+      checkVersion();
+    });
+  }
+})();
+</code></pre>
+<p>Это позволит нам показывать уведомления если пользователь дал разрешение раньше или разрешение было получено только что.</p>
+<h2>Показываем уведомления</h2><p>До сих пор мы показывали пользователям только простые уведомления, которые не содержали много информации. Напишем функцию, которая позволит на лету создать уведомления и контролировать множество других аспектов наших уведомлений.</p>
+<p>Функция имеет параметры для основного текста, иконки заголовка а также дополнительную ссылка и продолжительность уведомления. Внутри, мы создаем объект, который хранит опции основной текст уведомления и значок. Также создадим новый экземпляр объекта <code>Notification</code>, получающий в качестве параметров, заголовок уведомления и объект опций.</p>
+<p>Следом, мы добавим обработчик события <code>onclick</code> если мы хотим связать ссылку к нашим уведомлениям. Мы используем <code>setTimeout()</code>, чтобы закрыть уведомление через указанное время. Если время не указывается при вызове функции, по умолчанию используется пять секунд.</p>
+<pre><code class="language-javascript">function displayNotification(body, icon, title, link, duration) {
+  link = link || null; 
+  duration = duration || 5000; 
+
+  var options = {
+    body: body,
+    icon: icon
+  };
+
+  var n = new Notification(title, options);
+
+  if (link) {
+    n.onclick = function () {
+      window.open(link);
+    };
+  }
+
+  setTimeout(n.close.bind(n), duration);
+}
+</code></pre>
+<p>Теперь, изменим <code>checkVersion()</code>, чтобы показывать посетителю больше информации.</p>
+<pre><code class="language-javascript">function checkVersion() {
+  var latestVersion = document.querySelector(&quot;.js-currentVersion&quot;).textContent;
+  var currentVersion = localStorage.getItem(&quot;conciseVersion&quot;);
+
+  if (currentVersion === null || semverCompare(currentVersion, latestVersion) === -1) {      
+    displayNotification(
+      `Click to see what&#39;s new in v${latestVersion}`,
+      &quot;http://concisecss.com/images/logo.png&quot;,
+      &quot;A new version of Concise is available&quot;,
+      `https://github.com/ConciseCSS/concise.css/releases/v${latestVersion}`
+    );
+
+    localStorage.setItem(&quot;conciseVersion&quot;, latestVersion);
+  }
+}
+</code></pre>
+<p>Мы используем нашу функцию <code>displayNotification</code>, чтобы добавить описание, картинку, заголовок и ссылку к нашему уведомлению.</p>
+<blockquote>
+<p><strong>Примечание:</strong> мы использовали ES6 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">template literals</a> чтобы вставить выражения в наш текст.</p>
+</blockquote>
+<h2>Полный код и тестирование</h2><p>Ниже вы можете увидеть полный код который мы написали на этом уроке.</p>
+<pre><code class="language-javascript">(function() {
+ // Check permissions
+ if (&quot;Notification&quot; in window) {
+   var permission = Notification.permission;  
+
+   if (permission === &quot;denied&quot;) {
+     return;
+   } else if (permission === &quot;granted&quot;) {
+     return checkVersion();
+   }  
+
+   Notification.requestPermission().then(function() {
+     checkVersion();
+   });
+ }
+
+ function checkVersion() {
+   // Retrieve current version
+   var latestVersion = document.querySelector(&quot;.js-currentVersion&quot;).textContent;
+   var currentVersion = localStorage.getItem(&quot;conciseVersion&quot;);
+   if (currentVersion === null || semverCompare(currentVersion, latestVersion) === -1 ) {
+     displayNotification(
+       `Click to see what&#39;s new in v${latestVersion}`,
+       &quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/123941/concise-logo.png&quot;,
+       &quot;A new version of Concise is available&quot;,
+       `https://github.com/ConciseCSS/concise.css/releases/v${latestVersion}`
+     );  
+
+     localStorage.setItem(&quot;conciseVersion&quot;, latestVersion);
+   }
+ }
+
+ function displayNotification(body, icon, title, link, duration) {
+   link = link || 0;
+   duration = duration || 5000;
+   var options = {
+     body: body,
+     icon: icon
+   };
+
+   var n = new Notification(title, options);
+
+   if (link) {
+     n.onclick = function () {
+       window.open(link);
+     };
+   }
+   setTimeout(n.close.bind(n), duration);
+ }
+}());
+</code></pre>
+<p>Запуск этого кода должен создать следующее уведомление в вашем браузере.</p>
+<figure class="image">
+<img src="/images/articles/09_05.png" alt="Финальный пример уведомления" title="Финальный пример уведомления">
+</figure>
+
+<p>Для тестирования, вам нужно знать разрешения вашего браузера. Здесь некоторые ссылки для управления уведомлениями в <a href="https://support.google.com/chrome/answer/3220216?hl=en">Google Chrome</a>,<a href="https://support.apple.com/kb/PH21493?locale=en_US"> Safari</a>,<a href="https://support.mozilla.org/en-US/kb/push-notifications-firefox"> FireFox</a>, и <a href="https://blogs.windows.com/msedgedev/2016/05/16/web-notifications-microsoft-edge/#pFXFVz4uSycqSOcY.97">Microsoft Edge</a>. Кроме того,  для удобства тестирования, вам должны быть знакома консоль разработчика, чтобы удалять и изменять значения в <code>LocalStorage</code>.</p>
+<p>Вы можете тестировать пример, запустив скрипт один раз и изменить значение <code>.js-currentVersion</code> HTML элемента так, чтобы скрипт увидел различие. Вы также можете запускать, используя ту же версию, чтобы проверить, что вы не получаете повторных уведомлений.</p>
+<p>Это все, что нам нужно для динамических уведомлений! Если вы ищете большей гибкости для оповещений браузера, я рекомендую изучить <a href="https://developers.google.com/web/fundamentals/getting-started/codelabs/push-notifications/">Service Worker API</a>. Service workers могут использоваться, чтобы реагировать на <a href="https://developer.mozilla.org/en-US/docs/Web/API/Push_API">push notifications</a> и позволяет пользователям получать уведомления, независимо от того, находятся они сейчас на сайте или нет, в результате чего получаются более своевременные уведомления.</p></div></article><div class="container"><div class="c-footer"><div class="c-share"><a target="_blank" href="http://twitter.com/share?text=Показываем динамические сообщения используя Web Notification API&amp;url=http://canti.pw/articles/2016-12-23-browser-notification-api&amp;via=Canti32" rel="nofollow" class="share share--twitter"><i class="fo-twitter"></i></a><a target="_blank" href="http://www.facebook.com/sharer.php?u=http://canti.pw/articles/2016-12-23-browser-notification-api&amp;p[title]=Показываем динамические сообщения используя Web Notification API" rel="nofollow" class="share share--facebook"><i class="fo-facebook"></i></a><a target="_blank" href="https://plus.google.com/share?url=http://canti.pw/articles/2016-12-23-browser-notification-api" rel="nofollow" class="share share--google"><i class="fo-gplus"></i></a><a target="_blank" href="http://vk.com/share.php?url=http://canti.pw/articles/2016-12-23-browser-notification-api" rel="nofollow" class="share share--vkontakte"><i class="fo-vkontakte"></i></a></div></div></div><div class="c-disqus container"><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "http://canti.pw/articles/2016-12-23-browser-notification-api"
+  this.page.identifier = "9";};
+  (function() {var d = document, s = d.createElement('script');s.src = '//canti-pw.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());(d.head || d.body).appendChild(s);})();  </script></div></main><link rel="stylesheet" href="/css/fontello.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css"></body></html>

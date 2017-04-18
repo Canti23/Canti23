@@ -1,0 +1,133 @@
+<!DOCTYPE html><html lang="ru" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="initial-scale=1"><title>Асинхронные функции - Canti</title><meta name="description" content="Кратко об асинхронных функциях, как использовать и чем отличаются с обещаниями"><meta property="og:name" content="Асинхронные функции"><meta property="og:description" content="Кратко об асинхронных функциях, как использовать и чем отличаются с обещаниями"><meta property="og:site_name" content="Canti"><meta property="og:image" content="/images/articles/12_01.png"><meta property="og:type" content="article"><meta name="google-site-verification" content="RU0Ov8dsiMLXI5lHUisJEffXHfrAraMtqfAZlo5VBxs"><link rel="canonical" href="http://canti.pw/articles/2017-04-18-asynchronous-functions-101"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,500&amp;amp;subset=cyrillic|PT+Serif:400,400i,500,500i&amp;amp;subset=cyrillic" lazyload><link rel="stylesheet" href="/css/main.css"></head><body class="page page--articles"><header class="c-header"><div class="container container--large"><div class="header"><div class="header__info"><img src="/images/logo.png" class="header__logotype"><a data-text="Canti" href="/" class="header__site-name glitch">Canti</a></div><ul class="header__nav"><li><a href="/" class="active">Статьи</a></li><li><a href="/about.html">Обо мне </a></li></ul></div></div></header><main><article itemscope="itemscope" itemtype="http://schema.org/CreativeWork" class="article"><div class="container article__header"><h1 itemprop="name" class="article__title">Асинхронные функции</h1><div class="article__information"><div class="article__original"><a href="https://bitsofco.de/asynchronous-functions-101/">Asynchronous Functions 101</a></div><div class="article__detail"><span datetime="2017-04-18" itemprop="datePublished" class="article__date">2017-04-18</span><div class="article__tags"><span class="article__tag">JS</span></div></div></div></div><div class="container container--large article__image ta-center"><img src="/images/articles/12_01.png" alt="Асинхронные функции" itemprop="image"/></div><div itemprop="text" class="container article__content"><p>Одним из основных преимуществ JavaScript является то, что все асинхронно. Чаще всего, различные части вашего кода не влияют на выполнение других.</p>
+<pre><code class="language-javascript">doALongThing(() =&gt; console.log(&quot;Я породу в лог вторым!&quot;));
+console.log(&quot;Я попаду в лог первым&quot;);
+</code></pre>
+<p>К сожалению, это также один из основных недостатков JavaScript. Поскольку по умолчанию все асинхронно, если вы захотите выполнить код синхронно это станет проблемой.
+Первым решением этой проблемы были callbacks (функции обратного вызова). Если часть вашего кода зависела от результата другого, нам бы пришлось сделать вложение -</p>
+<pre><code class="language-javascript">doSomething((response) =&gt; { 
+    doSomethingElse(
+        response,
+        (secondResponse) =&gt; {
+             doAThirdThing(secondResponse);
+    });
+})
+</code></pre>
+<p>Вложенные обратные вызовы обратных вызовов, как известно, стали недостижимыми. Итак, создали еще решение обещания. Что позволило нам иметь дело с синхронным кодом в гораздо более чистом, плоском виде.</p>
+<pre><code class="language-javascript">doSomething()
+.then((response) =&gt; doSomethingElse(response))
+.then((secondResponse) =&gt; doAThirdThing(secondResponse)); 
+// Можно упростить до doSomething().then(doSomethingElse).then(doAThirdThing);
+</code></pre>
+<p>Как и со всем, обещания тоже не были идеальными. Таким образом, в рамках спецификации ES2017 был определен другой метод для работы с синхронным кодом; Асинхронные функции. Это позволяет нам писать асинхронный код, как если бы он был синхронным.</p>
+<h2>Создание асинхронных функций</h2><p>Асинхронная функция определяется с помощью ключевого слова <strong>async</strong>. Базовая функция выглядит так:</p>
+<pre><code class="language-javascript">async function foo() {
+     const value = await somePromise();
+     return value; 
+}
+</code></pre>
+<p>Мы определяем функцию как асинхронную, подставляя <strong>async</strong> объявлению функции. Это ключевое слово может использоваться с любым синтаксисом объявления функции -</p>
+<pre><code class="language-javascript">// Обычная функция
+async function foo() { … }
+// Стрелочная функция 
+const foo = async () =&gt; { … } 
+// Метод класса
+class Bar { async foo() { … } }
+</code></pre>
+<p>Как только мы определили функцию как асинхронную, мы можем использовать ключевое слово <strong>await</strong>. Это ключевое слово помещается перед вызовом обещания, которое приостанавливает выполнение функции до тех пор, пока обещание не будет выполнено или отклонено.</p>
+<h2>Обработка ошибок</h2><p>Обработка ошибок в асинхронных функциях выполняется с помощью блоков <strong>try</strong> и <strong>catch</strong>. Первый блок, <strong>try</strong>, позволяет нам выполнить действие. Второй блок <strong>catch</strong>, вызывается, если действие не выполняется. Он принимает один параметр, содержащий любую ошибку.</p>
+<pre><code class="language-javascript">async function foo() {
+    try { 
+        const value = await somePromise();
+        return value;
+    } catch (err) { 
+        console.log(&quot;Упс, сдесь произошла ошибка :(&quot;); 
+    } 
+}
+</code></pre>
+<h2>Использование асинхронных функций</h2><p>Асинхронные функции не являются заменой обещаний. Они работают рука об руку. Асинхронная функция ожидает исполнения обещания, а асинхронная функция всегда возвращает обещание.</p>
+<p>Обещание, возвращаемое асинхронной функцией, будет разрешено с любым значением, возвращаемым функцией.</p>
+<pre><code class="language-javascript">async function foo() { 
+    await somePromise(); 
+    return &#39;Успех!&#39; 
+}
+
+foo().then((res) =&gt; console.log(res)) // Успех!
+</code></pre>
+<p>Если будет выдана ошибка, обещание будет отклонено с этой же ошибкой.</p>
+<pre><code class="language-javascript">async function foo() { 
+    await somePromise(); 
+    throw Error(&#39;Упс!&#39;) 
+} 
+
+foo() 
+ .then((res) =&gt; console.log(res)) 
+ .catch((err) =&gt; console.log(err)) // Упс!
+</code></pre>
+<h2>Выполнение асинхронных функций в параллельном режиме</h2><p>Мы можем выполнить несколько обещаний параллельно с помощью метода <code>Promise.all()</code>.</p>
+<pre><code class="language-javascript">function pause500ms() { 
+    return new Promise((res) =&gt; setTimeout(res, 500));
+}
+
+const promise1 = pause500ms();
+const promise2 = pause500ms(); 
+
+Promise.all([promise1, promise2]).then(() =&gt; { 
+    console.log(&quot;Я попаду в лог через 500ms&quot;);
+});
+</code></pre>
+<p>С асинхронными функциями нам нужно немного поработать, чтобы получить тот же эффект. Если мы просто перечислим каждую функцию, ожидающую в последовательности, они будут выполняться последовательно, так как <strong>await</strong> приостанавливает выполнение остальной функции.</p>
+<pre><code class="language-javascript">async function inSequence() { 
+    await pause500ms(); 
+    await pause500ms(); 
+    console.log(&quot;Я попаду в лог через 1000ms&quot;); 
+}
+</code></pre>
+<p>Это займет 1000 мс, так как второе <strong>await</strong> не запускается, пока не завершится первое. Чтобы обойти это, мы должны ссылаться на функции таким образом -</p>
+<pre><code class="language-javascript">async function inParallel() { 
+    const await1 = pause500ms();
+    const await2 = pause500ms();
+    await await1; 
+    await await2; 
+    console.log(&quot;Я попаду в лог через 500ms&quot;);
+}
+</code></pre>
+<p>Это займет всего 500 мс, потому что обе функции <code>pause500ms()</code> будут выполняться одновременно.</p>
+<h2>Обещания или асинхронные функции</h2><p>Как я уже упоминал, асинхронные функции не заменяют обещаний, они используются вместе. Асинхронные функции предоставляют альтернативный, а в некоторых случаях и лучший способ работы с функциями основанными на обещаниях. Но они все еще используют и производят обещания.</p>
+<p>Поскольку возвращается обещание, асинхронная функция может быть вызвана другой асинхронной функцией или обещанием. Мы можем смешивать и сопоставлять в зависимости от того, какой синтаксис лучше всего подходит для каждого случая.</p>
+<pre><code class="language-javascript">function baz() { 
+    return new Promise((res) =&gt; setTimeout(res, 1000)); 
+} 
+
+async function foo() { 
+    await baz(); 
+    return &#39;foo complete!&#39;;
+} 
+
+async function bar() { 
+    const value = await foo();
+     console.log(value);
+    return &#39;bar complete!&#39;;
+} 
+
+bar().then((value) =&gt; console.log(value));
+</code></pre>
+<p>Произойдет следующее:</p>
+<ol>
+<li>Ожидание 1000мс</li>
+<li>Запись в лог &quot;foo complete!&quot;</li>
+<li>Запись в лог &quot;bar complete!&quot;</li>
+</ol>
+<h2>Поддержка</h2><p>На момент написания, и асинхронные функции и обещания доступны в текущих версиях всех основных браузеров, за исключением Internet Explorer и Opera Mini.</p>
+<p class="ciu_embed" data-feature="promises" data-periods="future_1,current,past_1,past_2"><br>  <a href="http://caniuse.com/#feat=promises">
+    Can I Use promises
+  </a> 
+</p>
+
+<p class="ciu_embed" data-feature="async-functions" data-periods="future_1,current,past_1,past_2"><br>  <a href="http://caniuse.com/#feat=async-functions">
+    Can I Use async-functions
+  </a>
+</p></div></article><div class="container"><div class="c-footer"><div class="c-share"><a target="_blank" href="http://twitter.com/share?text=Асинхронные функции&amp;url=http://canti.pw/articles/2017-04-18-asynchronous-functions-101&amp;via=Canti32" rel="nofollow" class="share share--twitter"><i class="fo-twitter"></i></a><a target="_blank" href="http://www.facebook.com/sharer.php?u=http://canti.pw/articles/2017-04-18-asynchronous-functions-101&amp;p[title]=Асинхронные функции" rel="nofollow" class="share share--facebook"><i class="fo-facebook"></i></a><a target="_blank" href="https://plus.google.com/share?url=http://canti.pw/articles/2017-04-18-asynchronous-functions-101" rel="nofollow" class="share share--google"><i class="fo-gplus"></i></a><a target="_blank" href="http://vk.com/share.php?url=http://canti.pw/articles/2017-04-18-asynchronous-functions-101" rel="nofollow" class="share share--vkontakte"><i class="fo-vkontakte"></i></a></div></div></div><div class="c-disqus container"><div id="disqus_thread"></div><script>var disqus_config = function () {
+  this.page.url = "http://canti.pw/articles/2017-04-18-asynchronous-functions-101"
+  this.page.identifier = "12";};
+  (function() {var d = document, s = d.createElement('script');s.src = '//canti-pw.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());(d.head || d.body).appendChild(s);})();  </script></div></main><link rel="stylesheet" href="/css/fontello.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css"><script src="cdn.jsdelivr.net/caniuse-embed/1.0.1/caniuse-embed.min.js"></script></body></html>

@@ -44,8 +44,8 @@ class Bar { async foo() { … } }
     } 
 }
 </code></pre>
-<h2>Использование асинхронных функций</h2><p>Асинхронные функции не являются заменой обещаний. Они работают рука об руку. Асинхронная функция ожидает исполнения обещания, а асинхронная функция всегда возвращает обещание.</p>
-<p>Обещание, возвращаемое асинхронной функцией, будет разрешено с любым значением, возвращаемым функцией.</p>
+<h2>Использование асинхронных функций</h2><p>Асинхронные функции не являются заменой обещаний. Они работают рука об руку. Асинхронная функция ожидает (<strong>await</strong>) исполнения обещания, и асинхронная функция всегда <em>возвращает</em> обещание.</p>
+<p>Обещание, возвращаемое асинхронной функцией, будет разрешено с любым значением.</p>
 <pre><code class="language-javascript">async function foo() { 
     await somePromise(); 
     return &#39;Успех!&#39; 
@@ -130,4 +130,4 @@ bar().then((value) =&gt; console.log(value));
   this.page.url = "http://canti.pw/articles/2017-04-18-asynchronous-functions-101"
   this.page.identifier = "12";};
   (function() {var d = document, s = d.createElement('script');s.src = '//canti-pw.disqus.com/embed.js';
-  s.setAttribute('data-timestamp', + new Date());(d.head || d.body).appendChild(s);})();  </script></div></main><link rel="stylesheet" href="/css/fontello.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css"><script src="cdn.jsdelivr.net/caniuse-embed/1.0.1/caniuse-embed.min.js"></script></body></html>
+  s.setAttribute('data-timestamp', + new Date());(d.head || d.body).appendChild(s);})();  </script></div></main><link rel="stylesheet" href="/css/fontello.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css"><script src="https://cdn.jsdelivr.net/caniuse-embed/1.0.1/caniuse-embed.min.js"></script></body></html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html><html lang="ru" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="initial-scale=1"><title>Стрелочные функции - Canti</title><meta name="description" content="Кратко об стрелочных функциях, синтаксисе и отличиях от обычных"><meta property="og:name" content="Стрелочные функции"><meta property="og:description" content="Кратко об стрелочных функциях, синтаксисе и отличиях от обычных"><meta property="og:site_name" content="Canti"><meta property="og:image" content="/images/articles/13_01.png"><meta property="og:type" content="article"><meta name="google-site-verification" content="RU0Ov8dsiMLXI5lHUisJEffXHfrAraMtqfAZlo5VBxs"><link rel="canonical" href="http://canti.pw/articles/2017-05-10-javascript-arrow-functions-for-beginners"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,500&amp;amp;subset=cyrillic|PT+Serif:400,400i,500,500i&amp;amp;subset=cyrillic" lazyload><link rel="stylesheet" href="/css/main.css"></head><body class="page page--articles"><header class="c-header"><div class="container container--large"><div class="header"><div class="header__info"><img src="/images/logo.png" class="header__logotype"><a data-text="Canti" href="/" class="header__site-name glitch">Canti</a></div><ul class="header__nav"><li><a href="/" class="active">Статьи</a></li><li><a href="/about.html">Обо мне </a></li></ul></div></div></header><main><article itemscope="itemscope" itemtype="http://schema.org/CreativeWork" class="article"><div class="container article__header"><h1 itemprop="name" class="article__title">Стрелочные функции</h1><div class="article__information"><div class="article__original"><a href="https://hackernoon.com/javascript-arrow-functions-for-beginners-926947fc0cdc">JavaScript: Arrow Functions for Beginners</a></div><div class="article__detail"><span datetime="2017-05-10" itemprop="datePublished" class="article__date">2017-05-10</span><div class="article__tags"><span class="article__tag">JS</span></div></div></div></div><div class="container container--large article__image ta-center"><img src="/images/articles/13_01.png" alt="Стрелочные функции" itemprop="image"/></div><div itemprop="text" class="container article__content"><p>На прошлой неделе я опубликовал <a href="https://hackernoon.com/javascript-the-keyword-this-for-beginners-fb5238d99f85">эту статью</a> о ключевом слове <code>this</code>. Одной из тем, которые не были охвачены в этой статье, была стрелочные функции. Тема просто слишком велика, чтобы ее можно было охватить в той статье, поэтому здесь эта статья, чтобы наверстать упущенное. Читайте дальше, чтобы узнать об основах стрелочных функций!</p>
+<h2>Выгода №1: короткий синтаксис</h2><p>Давайте посмотрим на обычную функцию:</p>
+<pre><code class="language-javascript">function funcName(params) {
+  return params + 2;
+}
+funcName(2);
+// 4
+</code></pre>
+<p>Этот код указывает одну из двух причин для создания функций стрелок: <strong>короткий синтаксис</strong>. Точно такие же функции могут быть выражены как стрелочная функция в одной строку кода:</p>
+<pre><code class="language-javascript">var funcName = (params) =&gt; params + 2
+funcName(2);
+// 4
+</code></pre>
+<p>Довольно круто. Пример, очевидно, является крайним упрощением, но, надеюсь, иллюстрирует мою мысль. Давайте взглянем на синтаксис стрелочных функций подробнее:</p>
+<pre><code class="language-javascript">(parameters) =&gt; { statements }
+</code></pre>
+<p>Если у нас нет параметров, мы выражаем стрелочную функцию следующим образом:</p>
+<pre><code class="language-javascript">() =&gt; { statements }
+</code></pre>
+<p>Если у вас только один параметр, скобки необязательны:</p>
+<pre><code class="language-javascript">parameters =&gt; { statements }
+</code></pre>
+<p>Наконец, если вы возвращаете выражение, вы удаляете фигурные скобки:</p>
+<pre><code class="language-javascript">parameters =&gt; expression
+</code></pre>
+<pre><code class="language-javascript">// это эквивалентно:
+function (parameters){
+ return expression;
+}
+</code></pre>
+<p>Хорошо, теперь вы знаете синтаксис, как насчет примера? 
+Откройте консоль разработчика Chrome (Windows: <kbd>Ctrl + Shift + J</kbd>) (Mac: <kbd>Cmd + Option + J</kbd>) и введите следующее:</p>
+<pre><code class="language-javascript">var double = num =&gt; num * 2
+</code></pre>
+<p>Как вы видите, мы назначаем переменной <code>double</code> стрелочную функцию. Функция имеет один параметр, число. Поскольку есть только один параметр, мы опустили скобки вокруг параметра. Так как мы хотим вернуть значение <code>num * 2</code>, мы также опустили скобки вокруг возвращаемого выражения. Давайте вызовем функцию и увидим ее в действии:</p>
+<pre><code class="language-javascript">double(2);
+// 4
+double(3);
+// 6
+</code></pre>
+<h2>Выгода №2: нет привязки this</h2><p><em>Прежде чем двигаться дальше, вы нужно хорошо понимать ключевое слово <code>this</code> и как оно работает. Если вы хотите учиться или нуждаетесь в переподготовке, прочитайте <strong><a href="https://hackernoon.com/javascript-the-keyword-this-for-beginners-fb5238d99f85">пост</a></strong> на эту тему, прежде чем продолжить.</em></p>
+<p>В отличие от обычной функции у стрелочной функции нет привязки <code>this</code>. Вместо этого, <code>this</code> связывается лексически (т.е. <code>this</code> сохраняет свой смысл из исходного контекста).</p>
+<p>Пример должен прояснить В консоли можно создать функцию-конструктор, а затем создать ее экземпляр:</p>
+<pre><code class="language-javascript">function Counter() {
+ this.num = 0;
+}
+var a = new Counter();
+</code></pre>
+<p>Как вы догадываетесь, с помощью функции-конструктора значение параметра <code>this</code> связано с вновь создаваемым объектом, в данном случае, с объектом <code>a</code>. Вот почему мы можем выполнить <code>console.log a.num</code> и получить <code>0</code></p>
+<pre><code class="language-javascript">console.log(a.num);
+// 0
+</code></pre>
+<p>Что, если мы хотим увеличивать значение a.num каждую секунду? Мы можем использовать функцию <code>setInterval()</code>. <code>setInterval()</code> - это функция, которая вызывает другую функцию после заданного количества миллисекунд. Давайте добавим её в нашу функцию Counter:</p>
+<pre><code class="language-javascript">function Counter() {
+ this.num = 0;
+ this.timer = setInterval(function add() {
+   this.num++;
+   console.log(this.num);
+ }, 1000);
+}
+</code></pre>
+<p>Код выглядит так же, как и раньше, за исключением того, что мы добавили переменную <code>this.timer</code> и установили ее равной нашей функции <code>setInterval</code>. Каждые 1000 миллисекунд (одна секунда) код будет запущен. <code>this.num</code> будет увеличиваться на единицу, тогда он будет записан в консоль. Давайте попробуем. В консоли снова создайте экземпляр <code>Counter</code>:</p>
+<pre><code class="language-javascript">var b = new Counter();
+// NaN
+// NaN
+// NaN
+// ...
+</code></pre>
+<p>Как вы видите, функция будет выполняться каждую секунду. Но результат не тот, который мы ожидаем. <code>NaN</code> (Not a Number). Итак, что пошло не так? Во-первых, во-первых, прекратите надоедать интервалом, запустив:</p>
+<pre><code class="language-javascript">clearInterval(b.timer);
+</code></pre>
+<p>Продолжим. Наша функция <code>setInterval</code> не вызывается в объявленном объекте. Он также не вызывается с ключевым словом <code>new</code> (только как функция <code>Counter()</code>). И, наконец, мы не используем <code>call</code>, <code>bind</code> или <code>apply</code>. <code>setInterval</code> - это обычная функция. На самом деле, значение <code>this</code> в <code>setInterval</code> привязано к глобальному объекту! Давайте протестируем эту теорию, сделав лог значения <code>this</code>:</p>
+<pre><code class="language-javascript">function Counter() {
+  this.num = 0;
+  this.timer = setInterval(function add() {
+    console.log(this);
+  }, 1000);
+}
+var b = new Counter();
+</code></pre>
+<p>Как вы увидите, объект window вызывается каждую секунду. Очистите интервал, запустив:</p>
+<pre><code class="language-javascript">clearInterval(b.timer);
+</code></pre>
+<p>Вернемся к нашей первоначальной функции. Она регистрировала NaN, потому что <code>this.num</code> ссылался на свойство <code>num</code> объекта <code>window</code> (<code>window.num</code>, которого не существует), а не на объект <code>b</code> (<code>b.num</code>), который мы только что создали.</p>
+<p>Итак, как мы это исправим? Стрелкой! Нам нужна функция, которая не связывает <code>this</code>. С помощью стрелочной функции, <code>this</code> сохраняет значение из контекста. Давайте возьмем нашу оригинальную функцию <code>Counter</code> и заменим наш <code>setInterval</code> стрелочной функцией.</p>
+<pre><code class="language-javascript">function Counter() {
+ this.num = 0;
+ this.timer = setInterval(() =&gt; {
+   this.num++;
+   console.log(this.num);
+ }, 1000);
+}
+var b = new Counter();
+// 1
+// 2
+// 3
+// ...
+</code></pre>
+<p>Как вы увидите, консоль начнет регистрировать увеличивающиеся числа - <a href="https://68.media.tumblr.com/dc2acffbea837dc5277bb1b469aafbb7/tumblr_ngr5vefLfU1tgg4b1o1_500.gif">это работает</a>! Исходное <code>this</code> созданное конструктором функции счетчика, сохраняется. Внутри функции <code>setInterval</code> <code>this</code> все еще связано с нашим вновь созданным объектом <code>b</code>!</p>
+<p>Вы можете очистить интервал с помощью:</p>
+<pre><code class="language-javascript">clearInterval(b.timer);
+</code></pre>
+<p>Для доказательства концепции мы можем снова попытаться зарегистрировать <code>this</code> изнутри нашей стрелочной функции. Мы создадим переменную, которая называется <code>that</code> в нашей функции <code>Counter</code>. Затем мы выводим <code>true</code>, если значение этого параметра в нашей функции <code>setInterval</code> равно значению <code>this</code> (<code>that</code>) родительской функции <code>Counter</code>:</p>
+<pre><code class="language-javascript">function Counter() {
+ var that = this;
+ this.timer = setInterval(() =&gt; {
+   console.log(this === that);
+ }, 1000);
+}
+var b = new Counter();
+// true
+// true
+// ...
+</code></pre>
+<p>Как и ожидалось, лог срабатывает каждый раз! Снова очистите интервал с помощью:</p>
+<pre><code class="language-javascript">clearInterval(b.timer);
+</code></pre>
+<h2>Выводы</h2><p>Надеемся, эта статья помогла вам увидеть две основные преимущества стрелочных функций:</p>
+<ol>
+<li>Более короткий синтаксис</li>
+<li>Нет привязки <code>this</code></li>
+</ol>
+<p>Как отказ от ответственности, существуют больше стрелочных функций, чем было объяснено в этой статье. Но это должно дать вам отличную базу знаний для дальнейшего обучения!</p></div></article><div class="container"><div class="c-footer"><div class="c-share"><a target="_blank" href="http://twitter.com/share?text=Стрелочные функции&amp;url=http://canti.pw/articles/2017-05-10-javascript-arrow-functions-for-beginners&amp;via=Canti32" rel="nofollow" class="share share--twitter"><i class="fo-twitter"></i></a><a target="_blank" href="http://www.facebook.com/sharer.php?u=http://canti.pw/articles/2017-05-10-javascript-arrow-functions-for-beginners&amp;p[title]=Стрелочные функции" rel="nofollow" class="share share--facebook"><i class="fo-facebook"></i></a><a target="_blank" href="https://plus.google.com/share?url=http://canti.pw/articles/2017-05-10-javascript-arrow-functions-for-beginners" rel="nofollow" class="share share--google"><i class="fo-gplus"></i></a><a target="_blank" href="http://vk.com/share.php?url=http://canti.pw/articles/2017-05-10-javascript-arrow-functions-for-beginners" rel="nofollow" class="share share--vkontakte"><i class="fo-vkontakte"></i></a></div></div></div><div id="hypercomments_widget" class="container"><script>_hcwp = window._hcwp || [];
+_hcwp.push({widget:"Stream", widget_id: 90179});
+(function() {
+if("HC_LOAD_INIT" in window)return;
+HC_LOAD_INIT = true;
+var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/90179/"+lang+"/widget.js";
+var s = document.getElementsByTagName("script")[0];
+s.parentNode.insertBefore(hcc, s.nextSibling);
+})();</script><a href="http://hypercomments.com" class="hc-link" title="comments widget">comments powered by HyperComments</a></div></main><link rel="stylesheet" href="/css/fontello.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css"></body></html>

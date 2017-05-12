@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="ru" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="initial-scale=1"><title>8 правил CSS селекторов - Canti</title><meta name="description" content="Простые правила по наименованию и расположению CSS селекторов"><meta property="og:name" content="8 правил CSS селекторов"><meta property="og:description" content="Простые правила по наименованию и расположению CSS селекторов"><meta property="og:site_name" content="Canti"><meta property="og:image" content="/images/articles/14_01.png"><meta property="og:type" content="article"><meta name="google-site-verification" content="RU0Ov8dsiMLXI5lHUisJEffXHfrAraMtqfAZlo5VBxs"><link rel="canonical" href="http://canti.pw/articles/2017-05-13-8-css-selectors-dos-and-don-ts"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,500&amp;amp;subset=cyrillic|PT+Serif:400,400i,500,500i&amp;amp;subset=cyrillic" lazyload><link rel="stylesheet" href="/css/main.css"></head><body class="page page--articles"><header class="c-header"><div class="container container--large"><div class="header"><div class="header__info"><img src="/images/logo.png" class="header__logotype"><a data-text="Canti" href="/" class="header__site-name glitch">Canti</a></div><ul class="header__nav"><li><a href="/" class="active">Статьи</a></li><li><a href="/about.html">Обо мне </a></li></ul></div></div></header><main><article itemscope="itemscope" itemtype="http://schema.org/CreativeWork" class="article"><div class="container article__header"><h1 itemprop="name" class="article__title">8 правил CSS селекторов</h1><div class="article__information"><div class="article__original"><a href="https://medium.com/@aljullu/8-css-selectors-dos-and-don-ts-1e0d23fcf96c">8 CSS selectors DO’s and DON’Ts</a></div><div class="article__detail"><span datetime="2017-05-13" itemprop="datePublished" class="article__date">2017-05-13</span><div class="article__tags"><span class="article__tag">CSS</span></div></div></div></div><div class="container container--large article__image ta-center"><img src="/images/articles/14_01.png" alt="8 правил CSS селекторов" itemprop="image"/></div><div itemprop="text" class="container article__content"><p>##Не описывайте стиль именем селектора
+<strong>Нет</strong></p>
+<pre><code class="language-css">.blue-text { … }
+</code></pre>
+<p><strong>Да</strong></p>
+<pre><code class="language-css">.text--highlighted { … }
+</code></pre>
+<p>На это есть две причины</p>
+<ol>
+<li>Цвет вашего сайта сайта может легко измениться. Может и не из полностью синей темы в красную, но может цветовое колесо немного сдвинется и синий станет пурпурным или серым. Вам не придется искать и заменять все селекторы где хотите заменить цвет. Или, еще хуже, вы не закончите как-то так: <code>.blue-text { color: red; }</code></li>
+<li>Описание стиля в селекторе, делает их очень специфичными. Что если вам понадобится другой тон синего? Вы сделаете <code>.dark-blue-text</code>. А затем еще <code>.light-blue-text</code>. И ещё один <code>.light-blue-text-but-not-that-light</code>... Видите? Скоро здесь будет беспорядок.</li>
+</ol>
+<p>Селектор должен описывать цель/назначение, а не стиль.</p>
+<p>##Неиспользуйте в селекторах вложенность как можно дольше
+<strong>Нет</strong></p>
+<pre><code class="language-css">.content #intro .icon { … }
+</code></pre>
+<p><strong>Да</strong></p>
+<pre><code class="language-css">.intro__icon { … }
+</code></pre>
+<p>Серьезно, вложенность это станет вашим худшим кошмаром, особенно, когда она начнет стремительно расти. Постарайтесь избегать этого.</p>
+<p>И, кстати, НИКОГДА не используйте селекторы id. Ни их, ни <code>!important</code>. Никогда, никогда.</p>
+<p>##По возможности используйте селектор из одного класса
+<strong>Нет</strong></p>
+<pre><code class="language-css">.button.active { … }
+</code></pre>
+<p><strong>Да</strong></p>
+<pre><code class="language-css">.button--active { … }
+</code></pre>
+<p>Это сохранит специфичность на низком уровне и поможет избежать от использования слишком общих классов. Что, если другой разработчик добавит где-то в проекте <code>.active { font-weight: bold; }</code>?</p>
+<p>##Отделите селекторы от структуры HTML
+<strong>Нет</strong></p>
+<pre><code class="language-css">.header &gt; nav &gt; li &gt; button { … }
+</code></pre>
+<p><strong>Да</strong></p>
+<pre><code class="language-css">.header__button { … }
+</code></pre>
+<p>Это хорошее чувство, когда вы можете изменить структуру и CSS продолжит работать...</p>
+<p>##Располагайте селекторы в том же порядке как в HTML
+<strong>Нет</strong></p>
+<pre><code class="language-css">.footer { … }
+
+.header { … }
+</code></pre>
+<p><strong>Да</strong></p>
+<pre><code class="language-css">.header { … }
+
+.footer { … }
+</code></pre>
+<p>Могут быть элементы с разным порядком в коде HTML/структуре DOM и где они отображаются на экране (абсолютно спозиционированные, элементы flexbox и grid). Распологайте в том же порядке в котором они идут в HTML коде, а не в том в котором они отображаются.</p>
+<p>##Располагайте селекторы по специфике</p>
+<p>Предыдущее правило имеет исключение: когда располагаете селекторы к одному элементу.</p>
+<pre><code class="language-css">.list-item:first-child { … }
+
+.list-item { … }
+
+.list-item:last-child { … }
+</code></pre>
+<p><strong>Да</strong></p>
+<pre><code class="language-css">.list-item { … }
+
+.list-item:first-child { … }
+
+.list-item:last-child { … }
+</code></pre>
+<p>Правило CSS НИКОГДА не должно быть переопределено другим правилом расположеным до него. Помните, специфичность  может стать ужасным кошмаром, расположение селекторов по специфичности помогает понять код.</p>
+<p>##Все селекторы относящиеся к странице/компоненту делайте начинающимися с одного слова...
+Я использовал это правило до того, как узнал о BEM, и я думаю, что оно отлично работает в малых и средних проектах, без необходимости выполнять остальные правила BEM.</p>
+<pre><code class="language-css">.front-page-title { … }
+
+.intro-home { … }
+
+.home-text { … }
+</code></pre>
+<p><strong>Да</strong></p>
+<pre><code class="language-css">.home-title { … }
+
+.home-intro { … }
+
+.home-text { … }
+</code></pre>
+<p>##... и используйте это слово как имя файла
+Если вы используете CSS препроцессор, webpack loader или что-то похожее, вы скорее всего делите CSS на несколько файлов. Убедитесь, что все <code>.home-xyz { … }</code> селекторы находятся в home.css (или в _home.scss, без разницы).</p>
+<p>Таким образом, учитывая имя класса, вы автоматически узнаете, какой файл искать.</p></div></article><div class="container"><div class="c-footer"><div class="c-share"><a target="_blank" href="http://twitter.com/share?text=8 правил CSS селекторов&amp;url=http://canti.pw/articles/2017-05-13-8-css-selectors-dos-and-don-ts&amp;via=Canti32" rel="nofollow" class="share share--twitter"><i class="fo-twitter"></i></a><a target="_blank" href="http://www.facebook.com/sharer.php?u=http://canti.pw/articles/2017-05-13-8-css-selectors-dos-and-don-ts&amp;p[title]=8 правил CSS селекторов" rel="nofollow" class="share share--facebook"><i class="fo-facebook"></i></a><a target="_blank" href="https://plus.google.com/share?url=http://canti.pw/articles/2017-05-13-8-css-selectors-dos-and-don-ts" rel="nofollow" class="share share--google"><i class="fo-gplus"></i></a><a target="_blank" href="http://vk.com/share.php?url=http://canti.pw/articles/2017-05-13-8-css-selectors-dos-and-don-ts" rel="nofollow" class="share share--vkontakte"><i class="fo-vkontakte"></i></a></div></div></div><div id="hypercomments_widget" class="container"><script>_hcwp = window._hcwp || [];
+_hcwp.push({widget:"Stream", widget_id: 90179});
+(function() {
+if("HC_LOAD_INIT" in window)return;
+HC_LOAD_INIT = true;
+var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/90179/"+lang+"/widget.js";
+var s = document.getElementsByTagName("script")[0];
+s.parentNode.insertBefore(hcc, s.nextSibling);
+})();</script><a href="http://hypercomments.com" class="hc-link" title="comments widget">comments powered by HyperComments</a></div></main><link rel="stylesheet" href="/css/fontello.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css"></body></html>

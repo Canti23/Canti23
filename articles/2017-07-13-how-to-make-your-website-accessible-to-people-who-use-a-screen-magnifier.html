@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="ru" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="initial-scale=1"><title>Как сделать свой сайт доступным для людей, использующих экранную лупу - Canti</title><meta name="description" content="Пару советов от человека ежедневно использующего экранную лупу"><meta property="og:name" content="Как сделать свой сайт доступным для людей, использующих экранную лупу"><meta property="og:description" content="Пару советов от человека ежедневно использующего экранную лупу"><meta property="og:site_name" content="Canti"><meta property="og:image" content="/images/articles/15_01.png"><meta property="og:type" content="article"><meta name="google-site-verification" content="RU0Ov8dsiMLXI5lHUisJEffXHfrAraMtqfAZlo5VBxs"><meta name="yandex-verification" content="d1bb6d923adb4c50"><link rel="canonical" href="http://canti.pw/articles/2017-07-13-how-to-make-your-website-accessible-to-people-who-use-a-screen-magnifier"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,500&amp;amp;subset=cyrillic|PT+Serif:400,400i,500,500i&amp;amp;subset=cyrillic" lazyload><link rel="stylesheet" href="/css/main.css"></head><body class="page page--articles"><header class="c-header"><div class="container container--large"><div class="header"><div class="header__info"><img src="/images/logo.png" class="header__logotype"><a data-text="Canti" href="/" class="header__site-name glitch">Canti</a></div><ul class="header__nav"><li><a href="/" class="active">Статьи</a></li><li><a href="/about.html">Обо мне </a></li></ul></div></div></header><main><article itemscope="itemscope" itemtype="http://schema.org/CreativeWork" class="article"><div class="container article__header"><h1 itemprop="name" class="article__title">Как сделать свой сайт доступным для людей, использующих экранную лупу</h1><div class="article__information"><div class="article__original"><a href="https://dev.to/_bigblind/how-to-make-your-website-accessible-to-people-who-use-a-screen-magnifier">How to Make Your Website Accessible to People Who Use a Screen Magnifier</a></div><div class="article__detail"><span datetime="2017-07-13" itemprop="datePublished" class="article__date">2017-07-13</span><div class="article__tags"><span class="article__tag">UX</span><span class="article__tag">UI</span></div></div></div></div><div class="container container--large article__image ta-center"><img src="/images/articles/15_01.png" alt="Как сделать свой сайт доступным для людей, использующих экранную лупу" itemprop="image"/></div><div itemprop="text" class="container article__content"><p>Есть много информации о том, как сделать ваш сайт доступным. Но я не видел много по теме доступности для людей использующих экранные лупы. Я один из них, и я часто сталкиваюсь с раздражающими проблемами в Интернете.
+В этой статье я расскажу о том, как сделать ваш сайт более доступным для пользователей использующих приложения для увеличения части экрана.</p>
+<p><strong>Отказ от ответственности:</strong></p>
+<ul>
+<li>Эта статья основана на многолетнем использовании Интернета с экранной лупой. Я не проводил никаких исследований (мне бы хотелось увидеть результаты таких исследований).</li>
+<li>Я буду обсуждать только свои впечатления на ПК, а не на мобильных устройствах. Хотя я иногда использую экранную лупу, встроенную в IOS, но мобильный экран настолько мал, что когда увеличиваю до желаемого уровня, на экране помещается мало контента, поэтому предпочитаю использовать VoiceOver.</li>
+<li>В то время как создание сайтов, более доступных для скрин ридеров, <strong>всегда хорошо</strong>, ведь оно не влияет на внешний вид сайта, сделать сайт доступным для пользователей лупы, может стать средним действием. Я не дизайнер, и поэтому могу говорить о вещах, которые улучшат опыт для людей, использующих лупы, но сделают хуже для 99% ваших посетителей, которые полностью зрячие. В таких случаях, пожалуйста, оставьте комментарий, я хотел бы узнать об этом.</li>
+</ul>
+<h2>Что такое экранная лупа</h2><p>Экранная лупа - это программа, которая увеличивает экран (насколько это неожиданно!). Она показывает увеличенную часть экрана, либо на весь экран, либо в его области, оставив остальной без изменений.</p>
+<p>В качестве примера, вот как это выглядит на главной странице <a href="https://dev.to/">моего сайта</a>:</p>
+<figure class="image">
+<img src="/images/articles/15_02.gif" alt="Пример работы экранной лупы" title="Пример работы экранной лупы">
+</figure>
+
+<h2>Двигаем лупу по экрану</h2><p>Поскольку экран увеличивается, очевидно, что он не помещается на дисплее, поэтому при перемещении мыши вы перемещаете своего рода виртуальное прямоугольное увеличительное стекло вокруг экрана. На macOS существует 3 варианта того, как движение лупы относится к движению мыши, как показано на следующем изображении.</p>
+<figure class="image">
+<img src="/images/articles/15_03.gif" alt="Разные режимы работы экранной лупы" title="Разные режимы работы экранной лупы">
+</figure>
+
+<p>Я сожалею о небольшом размере шрифта в этом gif. Эти три прямоугольника представляют собой полноразмерный не увеличенный экран. Движущаяся точка представляет собой курсор мыши. На экране слева отображается настройка для непрерывного перемещения увеличенного изображения курсором. В середине отображается настройка для поддержания курсора вблизи центра, а в правой - для перемещения лупы, только когда указатель попадает на край увеличенной области.</p>
+<h2>1. Оставьте подсказки и другие всплывающие окна, видимыми, пока мышь находится на них</h2><p>Это самая большая проблема для меня, поэтому я поставил его первым. Если у вас не так, исправьте это первым делом. Вот пример из консоли AWS API Gateway:</p>
+<figure class="image">
+<img src="/images/articles/15_04.gif" alt="При наведении на подсказку она пропадает" title="При наведении на подсказку она пропадает">
+</figure>
+
+<p>Как можете видеть, всплывающая подсказка не отображаться полностью, когда курсор находится над информационным значком. Чтобы она вся была на виду, мне нужно переместить мышь, но из-за этого подсказка закрывается. Поэтому я никогда не смогу прочитать эту подсказку на том уровне увеличения, который мне нужен.</p>
+<p>Консоль AWS Lambda показывает, как можно сделать лучше:</p>
+<figure class="image">
+<img src="/images/articles/15_05.gif" alt="При наведении на подсказку она продлжает быть видимой" title="При наведении на подсказку она продлжает быть видимой">
+</figure>
+
+<p>Это намного лучше. Я могу переместить курсор на подсказку, чтобы прочитать её. Другим вариантом было бы включать подсказку по клику, давая пользователю понять, что на значок можно кликнуть, сделав его более похожим на кнопку и сменив курсор на руку при наведении.</p>
+<h2>2. Не скрывайте контент при наведении</h2><p>Самый раздражающий пример из недавнего, что я видел, - это уровни залога Kickstarter.</p>
+<figure class="image">
+<img src="/images/articles/15_06.gif" alt="При наведении на текст он затемняется" title="При наведении на текст он затемняется">
+</figure>
+
+<p>Я понимаю, они хотели превратить всю область в огромную кнопку «призыв к действию», когда курсор мыши находится на ней, но это наложение затрудняет чтение списка. Высококонтрастная граница могла бы также визуально выделять или можно менять фон текста, сохраняя сам текст видимым и с хорошим контрастом.</p>
+<p>Другим частым примером это кнопки появляющиеся при наведении у слайдеров/каруселей и видеороликов. Вот <a href="https://www.tvl.be/programmas/weerbericht-weerbericht-6-juni-45243">пример с сайта ТВЛ</a>, провинциальной бельгийской телевизионной сети. Они явно хотят указать, что нажатие на видео приостанавливает его. Думаю, для таких общих действий, не важна настолько большая область для взаимодействия, и даже если это так, должны быть, вероятно, более хорошие способы это сделать.</p>
+<figure class="image">
+<img src="/images/articles/15_07.gif" alt="При наведении на видео по центру появляется кнопка паузы" title="При наведении на видео по центру появляется кнопка паузы">
+</figure>
+
+<p>Вы можете объединить это с предыдущим пунктом как «не полагайтесь курсор для показа контента».</p>
+<h2>3 Показывайте результат действия рядом с местом где оно было вызвано</h2><p>Как пример <a href="https://www.digitalocean.com/?refcode=6e1ff92c19c3&amp;utm_campaign=Referral_Invite&amp;utm_medium=Referral_Program&amp;utm_source=CopyPaste">Digital Ocean</a>. (Вы получите 10$ на счет DigitalOcean если зарегистрируетесь через эту ссылку, и автор статьи получит бонус после того как вы потратите 25$)</p>
+<figure class="image">
+<img src="/images/articles/15_08.gif" alt="При использовании лупы на центральной части, всплывающее уведомление в углу не видно" title="При использовании лупы на центральной части, всплывающее уведомление в углу не видно">
+</figure>
+
+<p>В этом примере, я редактирую свой профиль в модальном окне в центре экране, а подтверждение появляется во всплывающем сообщении в верхнем правом углу.</p>
+<p>В этом случае, вы можете увидеть, что информация, в центре была обновлена, но это сложно заметить. Первый раз когда столкнулся с этой проблемой, это когда впервые пополнил баланс через PayPal. Я пропустил подобное сообщение, которое появилось в верхнем углу, потому что смотрел в центр страницы, ведь там основной контент. Мой баланс не обновился сразу, но я видел, что на PayPal оплата прошла, через пару минут, я начал думать, что у DigitalOcean баг, ведь они взяли мои деньги, но баланс не пополнили.</p>
+<p>Похожая проблема, когда использую поиск на <a href="https://codepen.io/">CodePen</a>. Если вы видите только правую часть экрана, не сразу понятно, куда вы должны перейти после нажатия на кнопку &quot;Поиск&quot;.</p>
+<figure class="image">
+<img src="/images/articles/15_09.gif" alt="Поле поиска появляется в другом углу от кнопки поиск" title="Поле поиска появляется в другом углу от кнопки поиск">
+</figure>
+
+<p>Визуально, мне очень нравится, как выглядит поиск. Но он сильно смутил меня, когда первый раз использовал его.</p>
+<h2>Вот так!</h2><p>По крайней мере, так я вижу. Но, может быть, мой взгляд слишком узкий. Вы сталкиваетесь с аналогичными проблемами из этого жанра? Есть ли у вас замечания по пунктам, которые я затронул? Пожалуйста, дайте мне знать в комментариях.</p></div></article><div class="container"><div class="c-footer"><div class="c-share"><a target="_blank" href="http://twitter.com/share?text=Как сделать свой сайт доступным для людей, использующих экранную лупу&amp;url=http://canti.pw/articles/2017-07-13-how-to-make-your-website-accessible-to-people-who-use-a-screen-magnifier&amp;via=Canti32" rel="nofollow" class="share share--twitter"><i class="fo-twitter"></i></a><a target="_blank" href="http://www.facebook.com/sharer.php?u=http://canti.pw/articles/2017-07-13-how-to-make-your-website-accessible-to-people-who-use-a-screen-magnifier&amp;p[title]=Как сделать свой сайт доступным для людей, использующих экранную лупу" rel="nofollow" class="share share--facebook"><i class="fo-facebook"></i></a><a target="_blank" href="https://plus.google.com/share?url=http://canti.pw/articles/2017-07-13-how-to-make-your-website-accessible-to-people-who-use-a-screen-magnifier" rel="nofollow" class="share share--google"><i class="fo-gplus"></i></a><a target="_blank" href="http://vk.com/share.php?url=http://canti.pw/articles/2017-07-13-how-to-make-your-website-accessible-to-people-who-use-a-screen-magnifier" rel="nofollow" class="share share--vkontakte"><i class="fo-vkontakte"></i></a></div></div></div><div id="hypercomments_widget" class="container"><script>_hcwp = window._hcwp || [];
+_hcwp.push({widget:"Stream", widget_id: 90179});
+(function() {
+if("HC_LOAD_INIT" in window)return;
+HC_LOAD_INIT = true;
+var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/90179/"+lang+"/widget.js";
+var s = document.getElementsByTagName("script")[0];
+s.parentNode.insertBefore(hcc, s.nextSibling);
+})();</script><a href="http://hypercomments.com" class="hc-link" title="comments widget">comments powered by HyperComments</a></div></main><link rel="stylesheet" href="/css/fontello.css"></body></html>

@@ -135,7 +135,7 @@ class Deploy {
 }
 // This is where the magic happens
 $post = json_decode(file_get_contents('php://input'), true);
-$slug = $post['repository']['slug'];
+$slug = $post['repository']['name'];
 
 if(array_key_exists($slug, $repos))
 {

@@ -134,11 +134,9 @@ class Deploy {
   }
 }
 // This is where the magic happens
-$slug = $_POST['repository']['slug'];
-if($slug == '') { // check in the 'payload' param if the data isn't in the post body itself
-	$post_data = json_decode(stripslashes($_POST['payload']), TRUE);
-	$slug = $post_data['repository']['slug'];
-}
+$post = json_decode(file_get_contents('php://input'), true);
+$slug = $post['repository']['slug'];
+
 if(array_key_exists($slug, $repos))
 {
 	$deploy = new Deploy($root_dir . $repos[$slug]);

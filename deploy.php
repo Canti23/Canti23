@@ -63,15 +63,12 @@ class Deploy {
   * @param  string  $directory  Directory where your website is located
   * @param  array   $data       Information about the deployment
   */
-  public function __construct($directory, $options = array())
-  {
+  public function __construct($directory, $options = array()) {
       // Determine the directory path
       $this->_directory = realpath($directory).DIRECTORY_SEPARATOR;
       $available_options = array('log', 'date_format', 'branch', 'remote');
-      foreach ($options as $option => $value)
-      {
-          if (in_array($option, $available_options))
-          {
+      foreach ($options as $option => $value) {
+          if (in_array($option, $available_options)) {
               $this->{'_'.$option} = $value;
           }
       }
@@ -83,15 +80,12 @@ class Deploy {
   * @param  string  $message  The message to write
   * @param  string  $type     The type of log message (e.g. INFO, DEBUG, ERROR, etc.)
   */
-  public function log($message, $type = 'INFO')
-  {
+  public function log($message, $type = 'INFO') {
       echo $message;
-      if ($this->_log)
-      {
+      if ($this->_log) {
           // Set the name of the log file
           $filename = $this->_log;
-          if ( ! file_exists($filename))
-          {
+          if ( ! file_exists($filename)) {
               // Create the log file
               file_put_contents($filename, '');
               // Allow anyone to write to log files
@@ -105,10 +99,8 @@ class Deploy {
   /**
   * Executes the necessary commands to deploy the website.
   */
-  public function execute()
-  {
-      try
-      {
+  public function execute() {
+    try {
           // Make sure we're in the right directory
           chdir($this->_directory);
           $this->log('Changing working directory... ');
@@ -121,32 +113,24 @@ class Deploy {
           // Secure the .git directory
           exec('chmod -R og-rx .git');
           $this->log('Securing .git directory... ');
-          if (is_callable($this->post_deploy))
-          {
+          if (is_callable($this->post_deploy)) {
               call_user_func($this->post_deploy, $this->_data);
           }
           $this->log('Deployment successful.');
-      }
-      catch (Exception $e)
-      {
+      } catch (Exception $e) {
           $this->log($e, 'ERROR');
       }
-  }
+    }
 }
 // This is where the magic happens
 $post = json_decode(file_get_contents('php://input'), true);
 $slug = $post['repository']['name'];
 
-if(array_key_exists($slug, $repos))
-{
+if (array_key_exists($slug, $repos)) {
 	$deploy = new Deploy($root_dir . $repos[$slug]);
 	$deploy->execute();
-}
-elseif($slug == '')
-{
+} elseif ($slug == '') {
 	die('No repo specified.');
-}
-else
-{
+} else {
 	die('Repo "' . $slug . '" has not been set up in the deploy script.');
 }
